@@ -1,7 +1,7 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Inova,com.Inova.Inova.Infra.Security,SecurityFilter,0,48,0,4,0,12,0,5,0,3
-Inova,com.Inova.Inova.Infra.Security,SecurityConfigurations,0,92,0,0,0,15,0,7,0,7
-Inova,com.Inova.Inova.Entities,UserEntity,0,45,0,2,0,11,0,5,0,4
+Inova,com.Inova.Inova.Infra.Security,SecurityConfigurations,0,103,0,0,0,16,0,7,0,7
+Inova,com.Inova.Inova.Entities,UserEntity,10,49,1,3,1,12,1,5,0,4
 Inova,com.Inova.Inova.Entities.DTO,LoginResponseDTO,6,0,0,0,1,0,1,0,1,0
 Inova,com.Inova.Inova.Entities.DTO,RegisterDTO,0,12,0,0,0,1,0,1,0,1
 Inova,com.Inova.Inova.Entities.DTO,AuthenticationDTO,0,9,0,0,0,1,0,1,0,1
@@ -10,8 +10,10 @@ Inova,com.Inova.Inova.Entities.Enum,Role,0,21,0,0,0,4,0,1,0,1
 Inova,com.Inova.Inova.Controller,AuthenticationController,36,3,0,0,10,1,2,1,2,1
 Inova,com.Inova.Inova.Controller,EventController,0,13,0,0,0,4,0,2,0,2
 Inova,com.Inova.Inova.Controller,UserController,20,3,0,0,6,1,2,1,2,1
+Inova,com.Inova.Inova.Controller,IdeaController,0,22,0,0,0,7,0,3,0,3
 Inova,com.Inova.Inova,InovaApplication,5,3,0,0,2,1,1,1,1,1
 Inova,com.Inova.Inova.Service,UserService,0,52,0,2,0,12,0,5,0,4
 Inova,com.Inova.Inova.Service,AuthorizationService,0,18,0,2,0,5,0,3,0,2
 Inova,com.Inova.Inova.Service,AuthenticationService,0,72,0,2,0,17,0,4,0,3
 Inova,com.Inova.Inova.Service,EventService,0,17,0,0,0,4,0,2,0,2
+Inova,com.Inova.Inova.Service,IdeaService,0,50,0,0,0,10,0,4,0,4
