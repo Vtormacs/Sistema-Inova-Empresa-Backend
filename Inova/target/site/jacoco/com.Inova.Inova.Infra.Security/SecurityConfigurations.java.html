@@ -31,7 +31,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 <span class="fc" id="L31">                        .requestMatchers(HttpMethod.POST, &quot;/api/auth/registrar&quot;).permitAll()</span>
 <span class="fc" id="L32">                        .requestMatchers(HttpMethod.PUT, &quot;/api/user/alterar-usuario&quot;).hasRole(&quot;ADMIN&quot;)</span>
 <span class="fc" id="L33">                        .requestMatchers(HttpMethod.GET, &quot;/api/user/listar-usuarios&quot;).hasRole(&quot;ADMIN&quot;)</span>
-<span class="fc" id="L34">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/save&quot;).hasRole(&quot;ADMIN&quot;)</span>
+<span class="fc" id="L34">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/criar-evento&quot;).hasRole(&quot;ADMIN&quot;)</span>
 <span class="fc" id="L35">                        .anyRequest().authenticated())</span>
 <span class="fc" id="L36">                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)</span>
 <span class="fc" id="L37">                .build();</span>
