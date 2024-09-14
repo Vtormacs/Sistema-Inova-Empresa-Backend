@@ -1,0 +1,15 @@
+com\Inova\Inova\Controller\AuthenticationController.class
+com\Inova\Inova\Controller\UserController.class
+com\Inova\Inova\Entities\DTO\RegisterDTO.class
+com\Inova\Inova\Service\AuthorizationService.class
+com\Inova\Inova\Infra\Token\TokenService.class
+com\Inova\Inova\Infra\Security\SecurityFilter.class
+com\Inova\Inova\Service\AuthenticationService.class
+com\Inova\Inova\Entities\DTO\LoginResponseDTO.class
+com\Inova\Inova\Entities\UserEntity.class
+com\Inova\Inova\InovaApplication.class
+com\Inova\Inova\Entities\DTO\AuthenticationDTO.class
+com\Inova\Inova\Infra\Security\SecurityConfigurations.class
+com\Inova\Inova\Entities\Enum\Role.class
+com\Inova\Inova\Service\UserService.class
+com\Inova\Inova\Repository\UserRepository.class
