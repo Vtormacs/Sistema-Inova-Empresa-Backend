@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthenticationService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Inova</a> &gt; <a href="index.source.html" class="el_package">com.Inova.Inova.Service</a> &gt; <span class="el_source">AuthenticationService.java</span></div><h1>AuthenticationService.java</h1><pre class="source lang-java linenums">package com.Inova.Inova.Service;
+
+import com.Inova.Inova.Entities.DTO.AuthenticationDTO;
+import com.Inova.Inova.Entities.DTO.RegisterDTO;
+import com.Inova.Inova.Entities.Enum.Role;
+import com.Inova.Inova.Entities.UserEntity;
+import com.Inova.Inova.Infra.Token.TokenService;
+import com.Inova.Inova.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+
+@Service
+<span class="fc" id="L17">public class AuthenticationService {</span>
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private TokenService tokenService;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    public String login(AuthenticationDTO dado) {
+        try {
+<span class="fc" id="L32">            var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(dado.email(), dado.senha());</span>
+<span class="fc" id="L33">            var auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);</span>
+
+<span class="fc" id="L35">            var token = tokenService.generateToken((UserEntity) auth.getPrincipal());</span>
+
+<span class="fc" id="L37">            return token;</span>
+<span class="fc" id="L38">        } catch (BadCredentialsException e) {</span>
+<span class="fc" id="L39">            throw e;</span>
+        }
+    }
+
+    public String registrar(RegisterDTO dado) throws Exception {
+        try {
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            if (userRepository.findByEmail(dado.email()) != null) {</span>
+<span class="fc" id="L46">                throw new IllegalArgumentException(&quot;Email ja esta sendo usado&quot;);</span>
+            }
+
+<span class="fc" id="L49">            String encryptedSenha = passwordEncoder.encode(dado.senha());</span>
+<span class="fc" id="L50">            UserEntity novoUsuario = new UserEntity(dado.nome(), dado.email(), encryptedSenha, Role.COLABORADOR);</span>
+
+<span class="fc" id="L52">            userRepository.save(novoUsuario);</span>
+
+<span class="fc" id="L54">            return &quot;Usuario registrado&quot;;</span>
+<span class="fc" id="L55">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L56">            throw e;</span>
+<span class="fc" id="L57">        } catch (Exception e) {</span>
+<span class="fc" id="L58">            throw new Exception(&quot;erro ao registrar user&quot;, e);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
