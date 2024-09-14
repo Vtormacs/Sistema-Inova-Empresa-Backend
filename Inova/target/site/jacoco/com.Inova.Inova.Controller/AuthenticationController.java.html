@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
         try {
 <span class="nc" id="L26">            var token = authenticationService.login(dado);</span>
 <span class="nc" id="L27">            return ResponseEntity.ok(new LoginResponseDTO(token));</span>
-<span class="nc" id="L28">        } catch (BadCredentialsException e){</span>
+<span class="nc" id="L28">        } catch (BadCredentialsException e) {</span>
 <span class="nc" id="L29">            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();</span>
         }
     }

@@ -20,31 +20,31 @@ import java.time.ZoneOffset;
 
     public String generateToken(UserEntity user) {
         try {
-<span class="nc" id="L23">            Algorithm algorithm = Algorithm.HMAC256(secreto);</span>
+<span class="fc" id="L23">            Algorithm algorithm = Algorithm.HMAC256(secreto);</span>
 
-<span class="nc" id="L25">            String token = JWT.create()</span>
-<span class="nc" id="L26">                    .withIssuer(&quot;api-inova&quot;)</span>
-<span class="nc" id="L27">                    .withSubject(user.getEmail())</span>
-<span class="nc" id="L28">                    .withExpiresAt(generateeExpirationDate())</span>
-<span class="nc" id="L29">                    .sign(algorithm);</span>
+<span class="fc" id="L25">            String token = JWT.create()</span>
+<span class="fc" id="L26">                    .withIssuer(&quot;api-inova&quot;)</span>
+<span class="fc" id="L27">                    .withSubject(user.getEmail())</span>
+<span class="fc" id="L28">                    .withExpiresAt(generateeExpirationDate())</span>
+<span class="fc" id="L29">                    .sign(algorithm);</span>
 
-<span class="nc" id="L31">            return token;</span>
-<span class="nc" id="L32">        }catch (JWTCreationException e){</span>
+<span class="fc" id="L31">            return token;</span>
+<span class="nc" id="L32">        } catch (JWTCreationException e) {</span>
 <span class="nc" id="L33">            throw new RuntimeException(&quot;Error while authenticating&quot;);</span>
         }
     }
 
-    private Instant generateeExpirationDate(){
-<span class="nc" id="L38">        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of(&quot;-03:00&quot;));</span>
+    private Instant generateeExpirationDate() {
+<span class="fc" id="L38">        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of(&quot;-03:00&quot;));</span>
     }
 
-    public String validarToken(String token){
-        try{
-<span class="nc" id="L43">            Algorithm algoritimo = Algorithm.HMAC256(secreto);</span>
+    public String validarToken(String token) {
+        try {
+<span class="fc" id="L43">            Algorithm algoritimo = Algorithm.HMAC256(secreto);</span>
 
-<span class="nc" id="L45">            return JWT.require(algoritimo).withIssuer(&quot;api-inova&quot;).build().verify(token).getSubject();</span>
-<span class="nc" id="L46">        } catch (JWTVerificationException VE){</span>
-<span class="nc" id="L47">            return null;</span>
+<span class="fc" id="L45">            return JWT.require(algoritimo).withIssuer(&quot;api-inova&quot;).build().verify(token).getSubject();</span>
+<span class="fc" id="L46">        } catch (JWTVerificationException VE) {</span>
+<span class="fc" id="L47">            return null;</span>
         }
     }
 }

@@ -10,12 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-<span class="fc" id="L18">public class AuthenticationService {</span>
+<span class="fc" id="L17">public class AuthenticationService {</span>
     @Autowired
     private AuthenticationManager authenticationManager;
 
@@ -30,33 +29,33 @@ import org.springframework.stereotype.Service;
 
     public String login(AuthenticationDTO dado) {
         try {
-<span class="fc" id="L33">            var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(dado.email(), dado.senha());</span>
-<span class="fc" id="L34">            var auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);</span>
+<span class="fc" id="L32">            var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(dado.email(), dado.senha());</span>
+<span class="fc" id="L33">            var auth = authenticationManager.authenticate(usernamePasswordAuthenticationToken);</span>
 
-<span class="fc" id="L36">            var token = tokenService.generateToken((UserEntity) auth.getPrincipal());</span>
+<span class="fc" id="L35">            var token = tokenService.generateToken((UserEntity) auth.getPrincipal());</span>
 
-<span class="fc" id="L38">            return token;</span>
-<span class="fc" id="L39">        } catch (BadCredentialsException e) {</span>
-<span class="fc" id="L40">            throw e;</span>
+<span class="fc" id="L37">            return token;</span>
+<span class="fc" id="L38">        } catch (BadCredentialsException e) {</span>
+<span class="fc" id="L39">            throw e;</span>
         }
     }
 
     public String registrar(RegisterDTO dado) throws Exception {
         try {
-<span class="fc bfc" id="L46" title="All 2 branches covered.">            if (userRepository.findByEmail(dado.email()) != null) {</span>
-<span class="fc" id="L47">                throw new IllegalArgumentException(&quot;Email ja esta sendo usado&quot;);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">            if (userRepository.findByEmail(dado.email()) != null) {</span>
+<span class="fc" id="L46">                throw new IllegalArgumentException(&quot;Email ja esta sendo usado&quot;);</span>
             }
 
-<span class="fc" id="L50">            String encryptedSenha = passwordEncoder.encode(dado.senha());</span>
-<span class="fc" id="L51">            UserEntity novoUsuario = new UserEntity(dado.nome(), dado.email(), encryptedSenha, Role.COLABORADOR);</span>
+<span class="fc" id="L49">            String encryptedSenha = passwordEncoder.encode(dado.senha());</span>
+<span class="fc" id="L50">            UserEntity novoUsuario = new UserEntity(dado.nome(), dado.email(), encryptedSenha, Role.COLABORADOR);</span>
 
-<span class="fc" id="L53">            userRepository.save(novoUsuario);</span>
+<span class="fc" id="L52">            userRepository.save(novoUsuario);</span>
 
-<span class="fc" id="L55">            return &quot;Usuario registrado&quot;;</span>
-<span class="fc" id="L56">        } catch (IllegalArgumentException e) {</span>
-<span class="fc" id="L57">            throw e;</span>
-<span class="fc" id="L58">        } catch (Exception e) {</span>
-<span class="fc" id="L59">            throw new Exception(&quot;erro ao registrar user&quot;, e);</span>
+<span class="fc" id="L54">            return &quot;Usuario registrado&quot;;</span>
+<span class="fc" id="L55">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L56">            throw e;</span>
+<span class="fc" id="L57">        } catch (Exception e) {</span>
+<span class="fc" id="L58">            throw new Exception(&quot;erro ao registrar user&quot;, e);</span>
         }
     }
 }

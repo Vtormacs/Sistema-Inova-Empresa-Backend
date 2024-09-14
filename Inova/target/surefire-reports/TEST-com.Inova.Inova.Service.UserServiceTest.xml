@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.Inova.Inova.Entities.UserEntityTest" time="0.059" tests="4" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.Inova.Inova.Service.UserServiceTest" time="0.021" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -10,6 +10,7 @@
     <property name="user.variant" value=""/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
     <property name="user.timezone" value="America/Sao_Paulo"/>
+    <property name="org.jboss.logging.provider" value="slf4j"/>
     <property name="os.name" value="Windows 11"/>
     <property name="java.vm.specification.version" value="17"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -30,6 +31,8 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="FILE_LOG_CHARSET" value="windows-1252"/>
+    <property name="java.awt.headless" value="true"/>
     <property name="surefire.real.class.path" value="C:\Users\vitor\AppData\Local\Temp\surefire3530423187683619068\surefirebooter-20240914130813729_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -43,11 +46,14 @@
     <property name="localRepository" value="C:\Users\vitor\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\vitor\AppData\Local\Temp\"/>
+    <property name="com.zaxxer.hikari.pool_number" value="2"/>
     <property name="java.version" value="17.0.12"/>
     <property name="user.dir" value="C:\Users\vitor\Projetos\Sistema-Inova-Empresa-Backend\Inova"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="PID" value="8248"/>
     <property name="sun.os.patch.level" value=""/>
+    <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jdk-17\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\Process Lasso\;C:\apache-maven-3.9.8\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\vitor\AppData\Local\Microsoft\WindowsApps;;C:\Users\vitor\AppData\Local\Programs\Ollama;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -56,8 +62,13 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="testGetPassword" classname="com.Inova.Inova.Entities.UserEntityTest" time="0.023"/>
-  <testcase name="testGetAuthoritiesForColaborador" classname="com.Inova.Inova.Entities.UserEntityTest" time="0.008"/>
-  <testcase name="testGetUsername" classname="com.Inova.Inova.Entities.UserEntityTest" time="0.002"/>
-  <testcase name="testGetAuthoritiesForAdmin" classname="com.Inova.Inova.Entities.UserEntityTest" time="0.001"/>
+  <testcase name="findAll" classname="com.Inova.Inova.Service.UserServiceTest" time="0.003">
+    <system-out><![CDATA[2024-09-14T13:08:21.258-03:00  INFO 8248 --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [com.Inova.Inova.Service.UserServiceTest]: UserServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2024-09-14T13:08:21.260-03:00  INFO 8248 --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration com.Inova.Inova.InovaApplication for test class com.Inova.Inova.Service.UserServiceTest
+]]></system-out>
+  </testcase>
+  <testcase name="testFindAllComErro" classname="com.Inova.Inova.Service.UserServiceTest" time="0.002"/>
+  <testcase name="alterarUsuario" classname="com.Inova.Inova.Service.UserServiceTest" time="0.002"/>
+  <testcase name="testAlterarUsuarioNaoEncontrado" classname="com.Inova.Inova.Service.UserServiceTest" time="0.002"/>
+  <testcase name="testAlterarUsuarioSemRole" classname="com.Inova.Inova.Service.UserServiceTest" time="0.003"/>
 </testsuite>

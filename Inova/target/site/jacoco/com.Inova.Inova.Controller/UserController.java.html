@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Inova</a> &gt; <a href="index.source.html" class="el_package">com.Inova.Inova.Controller</a> &gt; <span class="el_source">UserController.java</span></div><h1>UserController.java</h1><pre class="source lang-java linenums">package com.Inova.Inova.Controller;
 
+import com.Inova.Inova.Entities.Enum.Role;
 import com.Inova.Inova.Entities.UserEntity;
 import com.Inova.Inova.Service.UserService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+
 @RestController
 @RequestMapping(&quot;/api/user&quot;)
-<span class="fc" id="L15">public class UserController {</span>
+<span class="fc" id="L17">public class UserController {</span>
 
     @Autowired
     private UserService userService;
 
-//    @PostMapping(&quot;/save&quot;)
-//    public ResponseEntity&lt;UserEntity&gt; save(@RequestBody UserEntity user) {
-//        try {
-//            return ResponseEntity.ok(userService.save(user));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-//
-//    @PutMapping(&quot;/update&quot;)
-//    public ResponseEntity&lt;UserEntity&gt; update(@RequestBody UserEntity user, @RequestParam UUID uuid) {
-//        try {
-//            return ResponseEntity.ok(userService.update(user, uuid));
-//        } catch (Exception e) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//    }
-//
+    @GetMapping(&quot;/listar-usuarios&quot;)
+    public ResponseEntity&lt;List&lt;UserEntity&gt;&gt; findAll() {
+        try {
+<span class="nc" id="L25">            return ResponseEntity.ok(userService.findAll());</span>
+<span class="nc" id="L26">        } catch (Exception e) {</span>
+<span class="nc" id="L27">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+
+    @PutMapping(&quot;/alterar-usuario&quot;)
+    public ResponseEntity&lt;String&gt; update(@RequestBody Role role, @RequestParam UUID uuid) {
+        try {
+<span class="nc" id="L34">            return ResponseEntity.ok(userService.alterarUsuario(role, uuid));</span>
+<span class="nc" id="L35">        } catch (Exception e) {</span>
+<span class="nc" id="L36">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+
 //    @DeleteMapping(&quot;/delete&quot;)
 //    public ResponseEntity&lt;String&gt; delete(@RequestParam UUID uuid) {
 //        try {

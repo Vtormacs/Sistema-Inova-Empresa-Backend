@@ -54,18 +54,19 @@ public class UserEntity implements UserDetails {
 
     @Override
     public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
-<span class="fc bfc" id="L57" title="All 2 branches covered.">        if(this.role == Role.ADMIN) return List.of(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;), new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;), new SimpleGrantedAuthority(&quot;ROLE_AVALIADOR&quot;));</span>
-<span class="fc" id="L58">        else return List.of(new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;));</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (this.role == Role.ADMIN)</span>
+<span class="fc" id="L58">            return List.of(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;), new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;), new SimpleGrantedAuthority(&quot;ROLE_AVALIADOR&quot;));</span>
+<span class="fc" id="L59">        else return List.of(new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;));</span>
     }
 
     @Override
     public String getPassword() {
-<span class="fc" id="L63">        return senha;</span>
+<span class="fc" id="L64">        return senha;</span>
     }
 
     @Override
     public String getUsername() {
-<span class="fc" id="L68">        return email;</span>
+<span class="fc" id="L69">        return email;</span>
     }
 
     // associations
