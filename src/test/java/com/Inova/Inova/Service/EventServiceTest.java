@@ -32,7 +32,7 @@ class EventServiceTest {
     @Test
     void criarEvento() {
         EventEntity evento = new EventEntity(UUID.randomUUID(), "Evento teste", "Descricao", LocalDate.of(2024, 1, 1)
-                , LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null);
+                , LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null);
 
         when(eventRepository.save(evento)).thenReturn(evento);
 
@@ -63,7 +63,7 @@ class EventServiceTest {
         UUID jurado2Id = UUID.randomUUID();
 
         EventEntity evento = new EventEntity(eventId, "Evento Teste", "Descricao", LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null);
+                LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null);
 
         UserEntity jurado1 = new UserEntity(jurado1Id, "Jurado 1", "jurado1@gmail.com", "senha1", null, null, null);
         UserEntity jurado2 = new UserEntity(jurado2Id, "Jurado 2", "jurado2@gmail.com", "senha2", null, null, null);
@@ -100,7 +100,7 @@ class EventServiceTest {
         UUID jurado1Id = UUID.randomUUID();
 
         EventEntity evento = new EventEntity(eventId, "Evento Teste", "Descricao", LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null);
+                LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(evento));
         when(userRepository.findById(jurado1Id)).thenReturn(Optional.empty());
@@ -116,9 +116,9 @@ class EventServiceTest {
     void findAll() {
         List<EventEntity> eventos = List.of(
                 new EventEntity(UUID.randomUUID(), "Evento 1", "Descrição 1", LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null),
+                        LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null),
                 new EventEntity(UUID.randomUUID(), "Evento 2", "Descrição 2", LocalDate.of(2024, 2, 1),
-                        LocalDate.of(2024, 2, 10), LocalDate.of(2024, 2, 5), LocalDate.of(2024, 2, 7), null)
+                        LocalDate.of(2024, 2, 10), LocalDate.of(2024, 2, 5), LocalDate.of(2024, 2, 7), null, null)
         );
 
         when(eventRepository.findAll()).thenReturn(eventos);

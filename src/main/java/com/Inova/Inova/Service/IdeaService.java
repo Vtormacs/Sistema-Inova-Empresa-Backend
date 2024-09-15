@@ -28,34 +28,40 @@ public class IdeaService {
 
     public IdeaEntity postarIdeia(IdeaEntity ideia, UUID id_evento) {
         try {
-            System.out.println(eventRepository.findById(id_evento));
-            EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -> new RuntimeException("Erro ao encontrar evento"));
+            EventEntity evento = eventRepository.findById(id_evento)
+                    .orElseThrow(() -> new RuntimeException("Evento não encontrado"));
 
-            Set<UUID> colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());
+            // Log para verificar o evento encontrado
+            System.out.println("Evento encontrado: " + evento.getNome());
 
-            Set<UserEntity> colaboradores = colaboradoresIds.stream().map(id -> {
-                UserEntity colaborador = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Colaborador não encontrado com ID: " + id));
+            Set<UUID> colaboradoresIds = ideia.getColaboradores().stream()
+                    .map(UserEntity::getId)
+                    .collect(Collectors.toSet());
 
-                if (colaborador.getIdeia() != null) {
-                    throw new RuntimeException("Colaborador já vinculado a outra ideia: " + colaborador.getNome());
-                }
-                return colaborador;
-            }).collect(Collectors.toSet());
+            Set<UserEntity> colaboradores = colaboradoresIds.stream()
+                    .map(id -> userRepository.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Colaborador não encontrado com ID: " + id)))
+                    .collect(Collectors.toSet());
 
             ideia.setColaboradores(colaboradores);
-
+            ideia.setEvento(evento);
             colaboradores.forEach(colaborador -> colaborador.setIdeia(ideia));
+            evento.getIdeias().add(ideia);
 
-            Set<IdeaEntity> ideias = evento.getIdeias();
-            ideias.add(ideia);
+            // Log para verificar a ideia e seus colaboradores
+            System.out.println("Colaboradores da ideia: " + colaboradores.size());
+
+            IdeaEntity ideiaSalva = ideaRepository.save(ideia);
             eventRepository.save(evento);
-            return ideaRepository.save(ideia);
-        } catch (Exception e) {
 
-            System.out.println(e.getMessage());
-            throw new RuntimeException("Erro postar ideia " + e.getMessage());
+            return ideiaSalva;
+        } catch (Exception e) {
+            // Log do erro para diagnóstico
+            System.out.println("Erro ao postar ideia: " + e.getMessage());
+            throw new RuntimeException("Erro ao postar ideia: " + e.getMessage());
         }
     }
+
 
     public List<IdeaEntity> findAll() {
         try {

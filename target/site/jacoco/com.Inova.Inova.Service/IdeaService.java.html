@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IdeaService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Inova</a> &gt; <a href="index.source.html" class="el_package">com.Inova.Inova.Service</a> &gt; <span class="el_source">IdeaService.java</span></div><h1>IdeaService.java</h1><pre class="source lang-java linenums">package com.Inova.Inova.Service;
 
+import com.Inova.Inova.Entities.EventEntity;
 import com.Inova.Inova.Entities.IdeaEntity;
 import com.Inova.Inova.Entities.UserEntity;
+import com.Inova.Inova.Repository.EventRepository;
 import com.Inova.Inova.Repository.IdeaRepository;
 import com.Inova.Inova.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-<span class="fc" id="L16">public class IdeaService {</span>
+<span class="fc" id="L18">public class IdeaService {</span>
 
     @Autowired
     private IdeaRepository ideaRepository;
@@ -21,35 +23,51 @@ import java.util.stream.Collectors;
     @Autowired
     private UserRepository userRepository;
 
-    public IdeaEntity postarIdeia(IdeaEntity ideia) {
+    @Autowired
+    private EventRepository eventRepository;
+
+    public IdeaEntity postarIdeia(IdeaEntity ideia, UUID id_evento) {
         try {
+<span class="fc" id="L31">            EventEntity evento = eventRepository.findById(id_evento)</span>
+<span class="fc" id="L32">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Evento não encontrado&quot;));</span>
 
-<span class="fc" id="L27">            Set&lt;UUID&gt; colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());</span>
+            // Log para verificar o evento encontrado
+<span class="fc" id="L35">            System.out.println(&quot;Evento encontrado: &quot; + evento.getNome());</span>
 
-<span class="fc" id="L29">            Set&lt;UserEntity&gt; colaboradores = colaboradoresIds.stream().map(id -&gt; {</span>
-<span class="fc" id="L30">                UserEntity colaborador = userRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Colaborador não encontrado com ID: &quot; + id));</span>
+<span class="fc" id="L37">            Set&lt;UUID&gt; colaboradoresIds = ideia.getColaboradores().stream()</span>
+<span class="fc" id="L38">                    .map(UserEntity::getId)</span>
+<span class="fc" id="L39">                    .collect(Collectors.toSet());</span>
 
-<span class="pc bpc" id="L32" title="1 of 2 branches missed.">                if (colaborador.getIdeia() != null) {</span>
-<span class="nc" id="L33">                    throw new RuntimeException(&quot;Colaborador já vinculado a outra ideia: &quot; + colaborador.getNome());</span>
-                }
-<span class="fc" id="L35">                return colaborador;</span>
-<span class="fc" id="L36">            }).collect(Collectors.toSet());</span>
+<span class="fc" id="L41">            Set&lt;UserEntity&gt; colaboradores = colaboradoresIds.stream()</span>
+<span class="fc" id="L42">                    .map(id -&gt; userRepository.findById(id)</span>
+<span class="fc" id="L43">                            .orElseThrow(() -&gt; new RuntimeException(&quot;Colaborador não encontrado com ID: &quot; + id)))</span>
+<span class="fc" id="L44">                    .collect(Collectors.toSet());</span>
 
-<span class="fc" id="L38">            ideia.setColaboradores(colaboradores);</span>
+<span class="fc" id="L46">            ideia.setColaboradores(colaboradores);</span>
+<span class="fc" id="L47">            ideia.setEvento(evento);</span>
+<span class="fc" id="L48">            colaboradores.forEach(colaborador -&gt; colaborador.setIdeia(ideia));</span>
+<span class="fc" id="L49">            evento.getIdeias().add(ideia);</span>
 
-<span class="fc" id="L40">            colaboradores.forEach(colaborador -&gt; colaborador.setIdeia(ideia));</span>
+            // Log para verificar a ideia e seus colaboradores
+<span class="fc" id="L52">            System.out.println(&quot;Colaboradores da ideia: &quot; + colaboradores.size());</span>
 
-<span class="fc" id="L42">            return ideaRepository.save(ideia);</span>
-<span class="fc" id="L43">        } catch (Exception e) {</span>
-<span class="fc" id="L44">            throw new RuntimeException(&quot;Erro postar ideia &quot; + e.getMessage());</span>
+<span class="fc" id="L54">            IdeaEntity ideiaSalva = ideaRepository.save(ideia);</span>
+<span class="fc" id="L55">            eventRepository.save(evento);</span>
+
+<span class="fc" id="L57">            return ideiaSalva;</span>
+<span class="fc" id="L58">        } catch (Exception e) {</span>
+            // Log do erro para diagnóstico
+<span class="fc" id="L60">            System.out.println(&quot;Erro ao postar ideia: &quot; + e.getMessage());</span>
+<span class="fc" id="L61">            throw new RuntimeException(&quot;Erro ao postar ideia: &quot; + e.getMessage());</span>
         }
     }
 
+
     public List&lt;IdeaEntity&gt; findAll() {
         try {
-<span class="fc" id="L50">            return ideaRepository.findAll();</span>
-<span class="fc" id="L51">        } catch (Exception e) {</span>
-<span class="fc" id="L52">            throw new RuntimeException(&quot;erro ao listar as ideias &quot; + e.getMessage());</span>
+<span class="fc" id="L68">            return ideaRepository.findAll();</span>
+<span class="fc" id="L69">        } catch (Exception e) {</span>
+<span class="fc" id="L70">            throw new RuntimeException(&quot;erro ao listar as ideias &quot; + e.getMessage());</span>
         }
     }
 }

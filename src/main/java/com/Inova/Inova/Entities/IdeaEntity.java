@@ -39,6 +39,8 @@ public class IdeaEntity {
     private Set<UserEntity> colaboradores;
 
     @ManyToOne
+    @JoinColumn(name = "evento_id")
+    @JsonIgnoreProperties({"ideias", "jurados"})
     private EventEntity evento;
 
 }

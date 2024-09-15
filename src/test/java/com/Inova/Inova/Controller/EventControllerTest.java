@@ -4,8 +4,6 @@ import com.Inova.Inova.Entities.EventEntity;
 import com.Inova.Inova.Entities.UserEntity;
 import com.Inova.Inova.Repository.EventRepository;
 import com.Inova.Inova.Repository.UserRepository;
-import com.Inova.Inova.Service.EventService;
-import org.apache.catalina.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,14 +35,14 @@ class EventControllerTest {
     public void setup(){
         List<EventEntity> eventos = new ArrayList<>();
         eventos.add(new EventEntity(UUID.randomUUID(), "Evento 1", "Descricao", LocalDate.of(2024, 1, 1),
-                LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null));
+                LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null,null));
         when(eventRepository.findAll()).thenReturn(eventos);
     }
 
     @Test
     void criarEvento() {
         EventEntity evento = new EventEntity(UUID.randomUUID(), "Evento teste", "Descricao", LocalDate.of(2024, 1, 1)
-                , LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null);
+                , LocalDate.of(2024, 1, 10), LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null);
 
         when(eventRepository.save(evento)).thenReturn(evento);
 
@@ -76,7 +74,7 @@ class EventControllerTest {
 
         EventEntity evento = new EventEntity(eventId, "Evento Teste", "Descricao",
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 10),
-                LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null);
+                LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(evento));
         when(userRepository.findById(jurado1Id)).thenReturn(Optional.of(jurado1));
@@ -101,7 +99,7 @@ class EventControllerTest {
 
         EventEntity evento = new EventEntity(eventId, "Evento Teste", "Descricao",
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 10),
-                LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null);
+                LocalDate.of(2024, 1, 5), LocalDate.of(2024, 1, 7), null, null);
 
         when(eventRepository.findById(eventId)).thenReturn(Optional.of(evento));
         when(userRepository.findById(jurado1Id)).thenReturn(Optional.of(jurado1));

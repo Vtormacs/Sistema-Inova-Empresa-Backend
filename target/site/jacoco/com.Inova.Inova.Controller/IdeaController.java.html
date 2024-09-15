@@ -7,30 +7,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
 @RequestMapping(&quot;/api/idea&quot;)
-<span class="fc" id="L14">public class IdeaController {</span>
+<span class="fc" id="L15">public class IdeaController {</span>
 
     @Autowired
     private IdeaService ideaService;
 
     @PostMapping(&quot;/postar-ideia&quot;)
-    public ResponseEntity&lt;IdeaEntity&gt; postarIdeia(@RequestBody IdeaEntity ideia) {
+    public ResponseEntity&lt;IdeaEntity&gt; postarIdeia(@RequestBody IdeaEntity ideia, @RequestParam UUID id_evento) {
         try {
-<span class="fc" id="L22">            return ResponseEntity.ok(ideaService.postarIdeia(ideia));</span>
-<span class="fc" id="L23">        } catch (Exception e) {</span>
-<span class="fc" id="L24">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L23">            return ResponseEntity.ok(ideaService.postarIdeia(ideia, id_evento));</span>
+<span class="fc" id="L24">        } catch (Exception e) {</span>
+<span class="fc" id="L25">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
     @GetMapping(&quot;/listar-ideias&quot;)
     public ResponseEntity&lt;List&lt;IdeaEntity&gt;&gt; findAll() {
         try {
-<span class="fc" id="L31">            return ResponseEntity.ok(ideaService.findAll());</span>
-<span class="fc" id="L32">        } catch (Exception e) {</span>
-<span class="fc" id="L33">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L32">            return ResponseEntity.ok(ideaService.findAll());</span>
+<span class="fc" id="L33">        } catch (Exception e) {</span>
+<span class="fc" id="L34">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
