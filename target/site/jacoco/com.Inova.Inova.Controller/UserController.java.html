@@ -22,18 +22,18 @@ import java.util.UUID;
     @GetMapping(&quot;/listar-usuarios&quot;)
     public ResponseEntity&lt;List&lt;UserEntity&gt;&gt; findAll() {
         try {
-<span class="nc" id="L25">            return ResponseEntity.ok(userService.findAll());</span>
-<span class="nc" id="L26">        } catch (Exception e) {</span>
-<span class="nc" id="L27">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L25">            return ResponseEntity.ok(userService.findAll());</span>
+<span class="fc" id="L26">        } catch (Exception e) {</span>
+<span class="fc" id="L27">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
     @PutMapping(&quot;/alterar-usuario&quot;)
-    public ResponseEntity&lt;String&gt; update(@RequestBody Role role, @RequestParam UUID uuid) {
+    public ResponseEntity&lt;String&gt; alterarUsuario(@RequestBody Role role, @RequestParam UUID uuid) {
         try {
-<span class="nc" id="L34">            return ResponseEntity.ok(userService.alterarUsuario(role, uuid));</span>
-<span class="nc" id="L35">        } catch (Exception e) {</span>
-<span class="nc" id="L36">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L34">            return ResponseEntity.ok(userService.alterarUsuario(role, uuid));</span>
+<span class="fc" id="L35">        } catch (Exception e) {</span>
+<span class="fc" id="L36">            return ResponseEntity.badRequest().build();</span>
         }
     }
 

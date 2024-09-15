@@ -29,17 +29,17 @@ class UserServiceTest {
     List<UserEntity> lista = new ArrayList<>();
 
     @BeforeEach
-    public void setup(){
+    public void setup() {
         //findAll
-        this.lista.add(new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR));
-        this.lista.add(new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha2", Role.AVALIADOR));
-        this.lista.add(new UserEntity(UUID.randomUUID(), "teste3", "teste3@gmail.com", "senha3", Role.ADMIN));
+        this.lista.add(new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null));
+        this.lista.add(new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha2", Role.AVALIADOR, null, null));
+        this.lista.add(new UserEntity(UUID.randomUUID(), "teste3", "teste3@gmail.com", "senha3", Role.ADMIN, null, null));
         when(userRepository.findAll()).thenReturn(lista);
     }
 
     @Test
     void alterarUsuario() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR);
+        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
         Role novaRole = Role.ADMIN;
 
         when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
@@ -62,23 +62,23 @@ class UserServiceTest {
             userService.alterarUsuario(novaRole, userId);
         });
 
-        assertEquals("erro ao alterar usuario Usuario nao encontrado", exception.getMessage());
+        assertEquals("Erro ao alterar usuario: Usuario nao encontrado", exception.getMessage());
     }
 
     @Test
-    void testAlterarUsuarioSemRole() {
+    void testAlterarUsuarioComRoleInvalida() {
         UUID userId = UUID.randomUUID();
-        UserEntity user = new UserEntity();
-        user.setId(userId);
-        user.setRole(Role.COLABORADOR);
+        Role roleInvalida = null;
 
-        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.findById(userId)).thenReturn(Optional.of(new UserEntity()));
 
-        String resultado = userService.alterarUsuario(null, userId);
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            userService.alterarUsuario(roleInvalida, userId);
+        });
 
-        assertEquals("Role nao esta presente", resultado);
-        verify(userRepository, never()).save(user);
+        assertEquals("Erro ao alterar usuario: Role nao pode ser nula", exception.getMessage());
     }
+
 
     @Test
     void findAll() {

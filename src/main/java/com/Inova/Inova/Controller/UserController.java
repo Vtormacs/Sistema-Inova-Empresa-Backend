@@ -29,7 +29,7 @@ public class UserController {
     }
 
     @PutMapping("/alterar-usuario")
-    public ResponseEntity<String> update(@RequestBody Role role, @RequestParam UUID uuid) {
+    public ResponseEntity<String> alterarUsuario(@RequestBody Role role, @RequestParam UUID uuid) {
         try {
             return ResponseEntity.ok(userService.alterarUsuario(role, uuid));
         } catch (Exception e) {
