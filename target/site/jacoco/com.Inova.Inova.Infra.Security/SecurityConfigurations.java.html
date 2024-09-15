@@ -30,9 +30,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 <span class="fc" id="L30">                        .requestMatchers(HttpMethod.POST, &quot;/api/auth/login&quot;).permitAll()</span>
 <span class="fc" id="L31">                        .requestMatchers(HttpMethod.POST, &quot;/api/auth/registrar&quot;).permitAll()</span>
 <span class="fc" id="L32">                        .requestMatchers(HttpMethod.PUT, &quot;/api/user/alterar-usuario&quot;).hasRole(&quot;ADMIN&quot;)</span>
-<span class="fc" id="L33">                        .requestMatchers(HttpMethod.GET, &quot;/api/user/listar-usuarios&quot;).hasRole(&quot;ADMIN&quot;)</span>
-<span class="fc" id="L34">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/criar-evento&quot;).hasRole(&quot;ADMIN&quot;)</span>
-<span class="fc" id="L35">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/selecao-de-jurados&quot;).hasRole(&quot;ADMIN&quot;)</span>
+<span class="fc" id="L33">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/criar-evento&quot;).hasRole(&quot;ADMIN&quot;)</span>
+<span class="fc" id="L34">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/selecao-de-jurados&quot;).hasRole(&quot;ADMIN&quot;)</span>
+<span class="fc" id="L35">                        .requestMatchers(HttpMethod.GET, &quot;/api/user/listar-usuarios&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
 <span class="fc" id="L36">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/postar-ideia&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
 <span class="fc" id="L37">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/listar-ideias&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
 <span class="fc" id="L38">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/listar-eventos&quot;).hasRole(&quot;COLABORADOR&quot;)</span>

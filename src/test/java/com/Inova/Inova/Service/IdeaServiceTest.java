@@ -12,10 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -43,16 +40,20 @@ class IdeaServiceTest {
 
     @Test
     void postarIdeia() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", usuario);
+        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null);
+        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null);
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null);
 
-        when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+        when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
+        when(userRepository.findById(colaborador2.getId())).thenReturn(Optional.of(colaborador2));
         when(ideaRepository.save(ideia)).thenReturn(ideia);
+
+        ideia.setColaboradores(Set.of(colaborador1, colaborador2));
 
         var resultado = ideaService.postarIdeia(ideia);
 
         assertEquals("Ideia", resultado.getNome());
-        assertEquals(ideia, resultado.getColaborador().getIdeia());
+        assertEquals(2, resultado.getColaboradores().size());
     }
 
     @Test
@@ -65,16 +66,21 @@ class IdeaServiceTest {
 
     @Test
     void testAlterarUsuarioNaoEncontrado() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", usuario);
+        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null);
+        UUID idColaboradorNaoEncontrado = UUID.randomUUID();
 
-        when(userRepository.findById(usuario.getId())).thenReturn(Optional.empty());
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null);
+
+        ideia.setColaboradores(Set.of(colaborador1, new UserEntity(idColaboradorNaoEncontrado, null, null, null, null, null, null)));
+
+        when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
+        when(userRepository.findById(idColaboradorNaoEncontrado)).thenReturn(Optional.empty());
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             ideaService.postarIdeia(ideia);
         });
 
-        assertEquals("Erro postar ideia Usuario nao encontrado", exception.getMessage());
+        assertEquals("Erro postar ideia Colaborador não encontrado com ID: " + idColaboradorNaoEncontrado, exception.getMessage());
     }
 
     @Test

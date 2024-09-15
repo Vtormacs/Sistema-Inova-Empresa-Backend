@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class IdeaService {
@@ -20,11 +23,21 @@ public class IdeaService {
 
     public IdeaEntity postarIdeia(IdeaEntity ideia) {
         try {
-            UserEntity user = userRepository.findById(ideia.getColaborador().getId()).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
 
-            user.setIdeia(ideia);
+            Set<UUID> colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());
 
-            ideia.setColaborador(user);
+            Set<UserEntity> colaboradores = colaboradoresIds.stream().map(id -> {
+                UserEntity colaborador = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Colaborador não encontrado com ID: " + id));
+
+                if (colaborador.getIdeia() != null) {
+                    throw new RuntimeException("Colaborador já vinculado a outra ideia: " + colaborador.getNome());
+                }
+                return colaborador;
+            }).collect(Collectors.toSet());
+
+            ideia.setColaboradores(colaboradores);
+
+            colaboradores.forEach(colaborador -> colaborador.setIdeia(ideia));
 
             return ideaRepository.save(ideia);
         } catch (Exception e) {

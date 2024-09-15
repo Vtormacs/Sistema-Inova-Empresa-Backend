@@ -15,5 +15,5 @@ Inova,com.Inova.Inova,InovaApplication,5,3,0,0,2,1,1,1,1,1
 Inova,com.Inova.Inova.Service,UserService,0,55,0,2,0,12,0,5,0,4
 Inova,com.Inova.Inova.Service,AuthorizationService,0,18,0,2,0,5,0,3,0,2
 Inova,com.Inova.Inova.Service,AuthenticationService,0,72,0,2,0,17,0,4,0,3
-Inova,com.Inova.Inova.Service,EventService,0,92,0,0,0,18,0,7,0,7
-Inova,com.Inova.Inova.Service,IdeaService,0,50,0,0,0,10,0,4,0,4
+Inova,com.Inova.Inova.Service,EventService,0,95,0,0,0,19,0,7,0,7
+Inova,com.Inova.Inova.Service,IdeaService,7,78,1,1,1,15,1,6,0,6

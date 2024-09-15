@@ -48,7 +48,7 @@ public class UserEntity implements UserDetails {
     @Column
     private Role role;
 
-    @OneToOne
+    @ManyToOne
     @JsonIgnoreProperties({&quot;colaborador&quot;})
     private IdeaEntity ideia;
 

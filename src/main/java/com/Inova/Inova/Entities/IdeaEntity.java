@@ -10,6 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -33,7 +34,9 @@ public class IdeaEntity {
 
     private String descricao;
 
-    @OneToOne
+    @OneToMany
     @JsonIgnoreProperties({"senha", "eventos", "ideia", "password", "username", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
-    private UserEntity colaborador;
+    private Set<UserEntity> colaboradores;
+
+
 }

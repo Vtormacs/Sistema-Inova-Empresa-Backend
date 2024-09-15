@@ -8,9 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-<span class="fc" id="L13">public class IdeaService {</span>
+<span class="fc" id="L16">public class IdeaService {</span>
 
     @Autowired
     private IdeaRepository ideaRepository;
@@ -20,23 +23,33 @@ import java.util.List;
 
     public IdeaEntity postarIdeia(IdeaEntity ideia) {
         try {
-<span class="fc" id="L23">            UserEntity user = userRepository.findById(ideia.getColaborador().getId()).orElseThrow(() -&gt; new RuntimeException(&quot;Usuario nao encontrado&quot;));</span>
 
-<span class="fc" id="L25">            user.setIdeia(ideia);</span>
+<span class="fc" id="L27">            Set&lt;UUID&gt; colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());</span>
 
-<span class="fc" id="L27">            ideia.setColaborador(user);</span>
+<span class="fc" id="L29">            Set&lt;UserEntity&gt; colaboradores = colaboradoresIds.stream().map(id -&gt; {</span>
+<span class="fc" id="L30">                UserEntity colaborador = userRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Colaborador não encontrado com ID: &quot; + id));</span>
 
-<span class="fc" id="L29">            return ideaRepository.save(ideia);</span>
-<span class="fc" id="L30">        } catch (Exception e) {</span>
-<span class="fc" id="L31">            throw new RuntimeException(&quot;Erro postar ideia &quot; + e.getMessage());</span>
+<span class="pc bpc" id="L32" title="1 of 2 branches missed.">                if (colaborador.getIdeia() != null) {</span>
+<span class="nc" id="L33">                    throw new RuntimeException(&quot;Colaborador já vinculado a outra ideia: &quot; + colaborador.getNome());</span>
+                }
+<span class="fc" id="L35">                return colaborador;</span>
+<span class="fc" id="L36">            }).collect(Collectors.toSet());</span>
+
+<span class="fc" id="L38">            ideia.setColaboradores(colaboradores);</span>
+
+<span class="fc" id="L40">            colaboradores.forEach(colaborador -&gt; colaborador.setIdeia(ideia));</span>
+
+<span class="fc" id="L42">            return ideaRepository.save(ideia);</span>
+<span class="fc" id="L43">        } catch (Exception e) {</span>
+<span class="fc" id="L44">            throw new RuntimeException(&quot;Erro postar ideia &quot; + e.getMessage());</span>
         }
     }
 
     public List&lt;IdeaEntity&gt; findAll() {
         try {
-<span class="fc" id="L37">            return ideaRepository.findAll();</span>
-<span class="fc" id="L38">        } catch (Exception e) {</span>
-<span class="fc" id="L39">            throw new RuntimeException(&quot;erro ao listar as ideias &quot; + e.getMessage());</span>
+<span class="fc" id="L50">            return ideaRepository.findAll();</span>
+<span class="fc" id="L51">        } catch (Exception e) {</span>
+<span class="fc" id="L52">            throw new RuntimeException(&quot;erro ao listar as ideias &quot; + e.getMessage());</span>
         }
     }
 }

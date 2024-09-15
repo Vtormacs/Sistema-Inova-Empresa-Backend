@@ -1,5 +1,6 @@
 package com.Inova.Inova.Service;
 
+import com.Inova.Inova.Entities.Enum.Role;
 import com.Inova.Inova.Entities.EventEntity;
 import com.Inova.Inova.Entities.UserEntity;
 import com.Inova.Inova.Repository.EventRepository;
@@ -35,6 +36,7 @@ public class EventService {
 
             Set<UserEntity> jurados = ids.stream().map(id -> {
                 UserEntity jurado = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Jurado com ID " + id + " não encontrado"));
+                jurado.setRole(Role.AVALIADOR);
                 return jurado;
             }).collect(Collectors.toSet());
 

@@ -15,10 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,17 +44,20 @@ class IdeaControllerTest {
 
     @Test
     void postarIdeia() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", usuario);
+        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null);
+        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null);
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null);
 
-        when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+        when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
+        when(userRepository.findById(colaborador2.getId())).thenReturn(Optional.of(colaborador2));
         when(ideaRepository.save(ideia)).thenReturn(ideia);
+
+        ideia.setColaboradores(Set.of(colaborador1, colaborador2));
 
         var resultado = ideaController.postarIdeia(ideia);
 
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
         assertEquals("Ideia", resultado.getBody().getNome());
-        assertEquals("teste", resultado.getBody().getColaborador().getNome());
     }
 
     @Test
