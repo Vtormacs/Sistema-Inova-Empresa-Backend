@@ -20,7 +20,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 class IdeaControllerTest {
@@ -37,14 +37,35 @@ class IdeaControllerTest {
     @MockBean
     EventRepository eventRepository;
 
+    UUID idEvento;
+    EventEntity evento;
+    UserEntity jurado1;
+    UserEntity jurado2;
+    Set<UserEntity> jurados;
+    IdeaEntity ideia1;
+    IdeaEntity ideia2;
+    Set<IdeaEntity> ideias;
 
     @BeforeEach
     void setup() {
-        List<IdeaEntity> lista = new ArrayList<>();
-        lista.add(new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null));
-        lista.add(new IdeaEntity(UUID.randomUUID(), "Ideia2", "Impacto2", new BigDecimal("1000.00"), "Descricao2", null, null));
-        lista.add(new IdeaEntity(UUID.randomUUID(), "Ideia3", "Impacto3", new BigDecimal("1000.00"), "Descricao3", null, null));
-        when(ideaRepository.findAll()).thenReturn(lista);
+        idEvento = UUID.randomUUID();
+
+        jurado1 = new UserEntity(UUID.randomUUID(), "Jurado 1", "jurado1@gmail.com", "senha", Role.AVALIADOR, null, null, null);
+        jurado2 = new UserEntity(UUID.randomUUID(), "Jurado 2", "jurado2@gmail.com", "senha", Role.AVALIADOR, null, null, null);
+
+        jurados = new HashSet<>(Arrays.asList(jurado1, jurado2));
+
+        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null);
+        ideia1.setJurados(new HashSet<>());
+
+        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null);
+        ideia2.setJurados(new HashSet<>());
+
+        ideias = new HashSet<>(Arrays.asList(ideia1, ideia2));
+
+        evento = new EventEntity(idEvento, "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
+        evento.setJurados(jurados);
+        evento.setIdeias(ideias);
     }
 
     @Test
@@ -52,10 +73,10 @@ class IdeaControllerTest {
         EventEntity evento = new EventEntity(UUID.randomUUID(), "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
         evento.setIdeias(new HashSet<>());
 
-        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null);
-        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null);
+        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
 
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null);
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null);
 
         when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
         when(userRepository.findById(colaborador2.getId())).thenReturn(Optional.of(colaborador2));
@@ -64,30 +85,27 @@ class IdeaControllerTest {
 
         ideia.setColaboradores(Set.of(colaborador1, colaborador2));
 
-        // Chamando o método do controlador
         var resultado = ideaController.postarIdeia(ideia, evento.getId());
 
-        // Verificando o código de status e a resposta
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
         assertEquals("Ideia", resultado.getBody().getNome());
     }
 
     @Test
     void findAll() {
+        when(ideaRepository.findAll()).thenReturn(List.of(ideia1, ideia2));
+
         var resultado = ideaController.findAll();
 
         assertEquals(HttpStatus.OK, resultado.getStatusCode());
-        assertEquals(3, resultado.getBody().size());
+        assertEquals(2, resultado.getBody().size());
     }
 
     @Test
     void postarIdeia_Error() {
-        IdeaEntity ideia = new IdeaEntity();
-        EventEntity evento = new EventEntity(UUID.randomUUID(), "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
-
         when(ideaRepository.save(any(IdeaEntity.class))).thenThrow(new RuntimeException("Erro ao postar ideia"));
 
-        var retorno = ideaController.postarIdeia(ideia, evento.getId());
+        var retorno = ideaController.postarIdeia(ideia1, evento.getId());
 
         assertEquals(HttpStatus.BAD_REQUEST, retorno.getStatusCode());
     }
@@ -101,4 +119,34 @@ class IdeaControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST, resultado.getStatusCode());
     }
 
+    @Test
+    void testDistribuirIdeiasSucesso() {
+        when(eventRepository.findById(idEvento)).thenReturn(Optional.of(evento));
+
+        ideaController.distribuirIdeias(idEvento);
+
+        assertTrue(ideia1.getJurados().contains(jurado1) || ideia1.getJurados().contains(jurado2));
+        assertTrue(ideia2.getJurados().contains(jurado1) || ideia2.getJurados().contains(jurado2));
+
+        verify(ideaRepository, times(2)).save(any(IdeaEntity.class));
+    }
+
+    @Test
+    void testDistribuirIdeiasSemIdeias() {
+        evento.setIdeias(new HashSet<>()); // Evento sem ideias
+        when(eventRepository.findById(idEvento)).thenReturn(Optional.of(evento));
+
+        var response = ideaController.distribuirIdeias(idEvento);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+    @Test
+    void testDistribuirIdeiasEventoNaoEncontrado() {
+        when(eventRepository.findById(idEvento)).thenReturn(Optional.empty());
+
+        var response = ideaController.distribuirIdeias(idEvento);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
 }

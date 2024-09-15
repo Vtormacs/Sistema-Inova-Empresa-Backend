@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -49,13 +46,15 @@ public class UserEntity implements UserDetails {
     private Role role;
 
     @ManyToOne
-    @JsonIgnoreProperties({"colaborador"})
+    @JsonIgnoreProperties({"colaboradores", "jurados"})
     private IdeaEntity ideia;
 
     @ManyToMany(mappedBy = "jurados")
-    @JsonIgnoreProperties({"jurados"})
+    @JsonIgnoreProperties({"jurados", "ideias"})
     private Set<EventEntity> eventos;
 
+    @ManyToMany
+    private Set<IdeaEntity> avaliacoes = new HashSet<>();
 
     public UserEntity(String nome, String email, String senha, Role role) {
         this.nome = nome;

@@ -32,9 +32,9 @@ class UserControllerTest {
     @BeforeEach
     public void setup() {
         //findAll
-        this.lista.add(new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null));
-        this.lista.add(new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha2", Role.AVALIADOR, null, null));
-        this.lista.add(new UserEntity(UUID.randomUUID(), "teste3", "teste3@gmail.com", "senha3", Role.ADMIN, null, null));
+        this.lista.add(new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null, null));
+        this.lista.add(new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha2", Role.AVALIADOR, null, null, null));
+        this.lista.add(new UserEntity(UUID.randomUUID(), "teste3", "teste3@gmail.com", "senha3", Role.ADMIN, null, null, null));
         when(userRepository.findAll()).thenReturn(lista);
     }
 
@@ -57,7 +57,7 @@ class UserControllerTest {
 
     @Test
     void alterarUsuario() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
+        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null, null);
         Role novaRole = Role.ADMIN;
 
         when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
