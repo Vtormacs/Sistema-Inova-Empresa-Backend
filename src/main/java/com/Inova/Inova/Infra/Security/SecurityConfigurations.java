@@ -32,7 +32,10 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.PUT, "/api/user/alterar-usuario").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/user/listar-usuarios").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/event/criar-evento").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/event/selecao-de-jurados").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/idea/postar-ideia").hasRole("COLABORADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/idea/listar-ideias").hasRole("COLABORADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/event/listar-eventos").hasRole("COLABORADOR")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

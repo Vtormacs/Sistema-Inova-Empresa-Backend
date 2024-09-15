@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Getter
@@ -48,7 +49,13 @@ public class UserEntity implements UserDetails {
     private Role role;
 
     @OneToOne
+    @JsonIgnoreProperties({"colaborador"})
     private IdeaEntity ideia;
+
+    @ManyToMany(mappedBy = "jurados")
+    @JsonIgnoreProperties({"jurados"})
+    private Set<EventEntity> eventos;
+
 
     public UserEntity(String nome, String email, String senha, Role role) {
         this.nome = nome;

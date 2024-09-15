@@ -34,6 +34,6 @@ public class IdeaEntity {
     private String descricao;
 
     @OneToOne
-    @JsonIgnoreProperties({"senha", "ideia", "password", "username", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
+    @JsonIgnoreProperties({"senha", "eventos", "ideia", "password", "username", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
     private UserEntity colaborador;
 }

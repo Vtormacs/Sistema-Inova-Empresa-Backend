@@ -43,7 +43,7 @@ class IdeaServiceTest {
 
     @Test
     void postarIdeia() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null);
+        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
         IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", usuario);
 
         when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
@@ -65,7 +65,7 @@ class IdeaServiceTest {
 
     @Test
     void testAlterarUsuarioNaoEncontrado() {
-        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null);
+        UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
         IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", usuario);
 
         when(userRepository.findById(usuario.getId())).thenReturn(Optional.empty());

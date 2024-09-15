@@ -6,10 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.UUID;
+
 
 @RestController
 @RequestMapping(&quot;/api/event&quot;)
-<span class="fc" id="L12">public class EventController {</span>
+<span class="fc" id="L15">public class EventController {</span>
 
     @Autowired
     private EventService eventService;
@@ -17,9 +20,29 @@ import org.springframework.web.bind.annotation.*;
     @PostMapping(&quot;/criar-evento&quot;)
     public ResponseEntity&lt;EventEntity&gt; criarEvento(@RequestBody EventEntity evento) {
         try {
-<span class="fc" id="L20">            return ResponseEntity.ok(eventService.criarEvento(evento));</span>
-<span class="fc" id="L21">        } catch (Exception e) {</span>
-<span class="fc" id="L22">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L23">            return ResponseEntity.ok(eventService.criarEvento(evento));</span>
+<span class="fc" id="L24">        } catch (Exception e) {</span>
+<span class="fc" id="L25">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+
+    @PostMapping(&quot;/selecao-de-jurados&quot;)
+    public ResponseEntity&lt;EventEntity&gt; selecaoDeJurados(@RequestBody List&lt;UUID&gt; ids, @RequestParam UUID idDoEvento) {
+        try {
+<span class="fc" id="L32">            EventEntity eventoAtualizado = eventService.selecaoDeJurados(ids, idDoEvento);</span>
+<span class="fc" id="L33">            return ResponseEntity.ok(eventoAtualizado);</span>
+<span class="fc" id="L34">        } catch (Exception e) {</span>
+<span class="fc" id="L35">            System.out.println(e.getMessage());</span>
+<span class="fc" id="L36">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+
+    @GetMapping(&quot;/listar-eventos&quot;)
+    public ResponseEntity&lt;List&lt;EventEntity&gt;&gt; findAll(){
+        try {
+<span class="fc" id="L43">            return ResponseEntity.ok(eventService.findAll());</span>
+<span class="fc" id="L44">        } catch (Exception e) {</span>
+<span class="fc" id="L45">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
