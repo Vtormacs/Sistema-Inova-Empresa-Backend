@@ -38,5 +38,7 @@ public class IdeaEntity {
     @JsonIgnoreProperties({"senha", "eventos", "ideia", "password", "username", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
     private Set<UserEntity> colaboradores;
 
+    @ManyToOne
+    private EventEntity evento;
 
 }

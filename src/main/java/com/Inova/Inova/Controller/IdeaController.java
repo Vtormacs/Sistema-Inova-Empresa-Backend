@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
@@ -17,9 +18,9 @@ public class IdeaController {
     private IdeaService ideaService;
 
     @PostMapping("/postar-ideia")
-    public ResponseEntity<IdeaEntity> postarIdeia(@RequestBody IdeaEntity ideia) {
+    public ResponseEntity<IdeaEntity> postarIdeia(@RequestBody IdeaEntity ideia, @RequestParam UUID id_evento) {
         try {
-            return ResponseEntity.ok(ideaService.postarIdeia(ideia));
+            return ResponseEntity.ok(ideaService.postarIdeia(ideia, id_evento));
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }

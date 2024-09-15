@@ -49,5 +49,7 @@ public class EventEntity {
     @JsonIgnoreProperties({"eventos", "ideia"})
     private Set<UserEntity> jurados;
 
+    @OneToMany(mappedBy = "evento")
+    private Set<IdeaEntity> ideias;
 
 }

@@ -1,7 +1,9 @@
 package com.Inova.Inova.Service;
 
+import com.Inova.Inova.Entities.EventEntity;
 import com.Inova.Inova.Entities.IdeaEntity;
 import com.Inova.Inova.Entities.UserEntity;
+import com.Inova.Inova.Repository.EventRepository;
 import com.Inova.Inova.Repository.IdeaRepository;
 import com.Inova.Inova.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,13 @@ public class IdeaService {
     @Autowired
     private UserRepository userRepository;
 
-    public IdeaEntity postarIdeia(IdeaEntity ideia) {
+    @Autowired
+    private EventRepository eventRepository;
+
+    public IdeaEntity postarIdeia(IdeaEntity ideia, UUID id_evento) {
         try {
+            System.out.println(eventRepository.findById(id_evento));
+            EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -> new RuntimeException("Erro ao encontrar evento"));
 
             Set<UUID> colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());
 
@@ -39,8 +46,13 @@ public class IdeaService {
 
             colaboradores.forEach(colaborador -> colaborador.setIdeia(ideia));
 
+            Set<IdeaEntity> ideias = evento.getIdeias();
+            ideias.add(ideia);
+            eventRepository.save(evento);
             return ideaRepository.save(ideia);
         } catch (Exception e) {
+
+            System.out.println(e.getMessage());
             throw new RuntimeException("Erro postar ideia " + e.getMessage());
         }
     }
