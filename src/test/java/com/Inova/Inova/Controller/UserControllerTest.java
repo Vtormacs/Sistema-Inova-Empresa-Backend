@@ -1,4 +1,4 @@
-package com.Inova.Inova.Service;
+package com.Inova.Inova.Controller;
 
 import com.Inova.Inova.Entities.Enum.Role;
 import com.Inova.Inova.Entities.UserEntity;
@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-class UserServiceTest {
+class UserControllerTest {
+
+    @Autowired
+    UserController userController;
 
     @MockBean
     UserRepository userRepository;
-
-    @Autowired
-    UserService userService;
 
     List<UserEntity> lista = new ArrayList<>();
 
@@ -38,16 +39,32 @@ class UserServiceTest {
     }
 
     @Test
+    void findAll() {
+        var retorno = userController.findAll();
+
+        assertEquals(HttpStatus.OK, retorno.getStatusCode());
+        assertEquals(3, retorno.getBody().size());
+    }
+
+    @Test
+    void testFindAllComErro() {
+        when(userRepository.findAll()).thenThrow(new RuntimeException());
+
+        var retorno = userController.findAll();
+
+        assertEquals(HttpStatus.BAD_REQUEST, retorno.getStatusCode());
+    }
+
+    @Test
     void alterarUsuario() {
         UserEntity usuario = new UserEntity(UUID.randomUUID(), "teste", "teste@gmail.com", "senha", Role.COLABORADOR, null, null);
         Role novaRole = Role.ADMIN;
 
         when(userRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
 
-        String resultado = userService.alterarUsuario(novaRole, usuario.getId());
+        var resultado = userController.alterarUsuario(novaRole, usuario.getId());
 
-        assertEquals("Usuario alterado para ADMIN", resultado);
-        assertEquals(novaRole, usuario.getRole());
+        assertEquals(HttpStatus.OK, resultado.getStatusCode());
         verify(userRepository).save(usuario);
     }
 
@@ -58,44 +75,21 @@ class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
 
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.alterarUsuario(novaRole, userId);
-        });
+        var retorno = userController.alterarUsuario(novaRole, userId);
 
-        assertEquals("Erro ao alterar usuario: Usuario nao encontrado", exception.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, retorno.getStatusCode());
     }
 
     @Test
     void testAlterarUsuarioComRoleInvalida() {
         UUID userId = UUID.randomUUID();
-        Role roleInvalida = null;
+        Role roleInvalida = null;  // Role nula
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(new UserEntity()));
 
-        Exception exception = assertThrows(RuntimeException.class, () -> {
-            userService.alterarUsuario(roleInvalida, userId);
-        });
+        var resultado = userController.alterarUsuario(roleInvalida, userId);
 
-        assertEquals("Erro ao alterar usuario: Role nao pode ser nula", exception.getMessage());
+        assertEquals(HttpStatus.BAD_REQUEST, resultado.getStatusCode());
     }
 
-
-    @Test
-    void findAll() {
-        var retorno = userService.findAll();
-
-        assertEquals(3, retorno.size());
-        assertEquals(Role.ADMIN, retorno.get(2).getRole());
-    }
-
-    @Test
-    void testFindAllComErro() {
-        when(userRepository.findAll()).thenThrow(new RuntimeException("Erro no banco de dados"));
-
-        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-            userService.findAll();
-        });
-
-        assertEquals("erro ao listar usuarios Erro no banco de dados", exception.getMessage());
-    }
 }

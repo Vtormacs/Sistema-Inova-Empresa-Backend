@@ -20,16 +20,16 @@ import java.util.UUID;
         try {
 <span class="fc" id="L21">            UserEntity user = userRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Usuario nao encontrado&quot;));</span>
 
-<span class="fc bfc" id="L23" title="All 2 branches covered.">            if (role != null) {</span>
-<span class="fc" id="L24">                user.setRole(role);</span>
-<span class="fc" id="L25">                userRepository.save(user);</span>
-
-<span class="fc" id="L27">                return &quot;Usuario alterado para &quot; + role.name();</span>
+<span class="fc bfc" id="L23" title="All 2 branches covered.">            if (role == null) {</span>
+<span class="fc" id="L24">                throw new RuntimeException(&quot;Role nao pode ser nula&quot;);</span>
             }
 
-<span class="fc" id="L30">            return &quot;Role nao esta presente&quot;;</span>
+<span class="fc" id="L27">            user.setRole(role);</span>
+<span class="fc" id="L28">            userRepository.save(user);</span>
+
+<span class="fc" id="L30">            return &quot;Usuario alterado para &quot; + role.name();</span>
 <span class="fc" id="L31">        } catch (Exception e) {</span>
-<span class="fc" id="L32">            throw new RuntimeException(&quot;erro ao alterar usuario &quot; + e.getMessage());</span>
+<span class="fc" id="L32">            throw new RuntimeException(&quot;Erro ao alterar usuario: &quot; + e.getMessage());</span>
         }
     }
 

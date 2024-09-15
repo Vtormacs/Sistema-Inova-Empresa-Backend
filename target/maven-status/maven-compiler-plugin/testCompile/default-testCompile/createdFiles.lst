@@ -8,4 +8,5 @@ com\Inova\Inova\Service\UserServiceTest.class
 com\Inova\Inova\Controller\EventControllerTest.class
 com\Inova\Inova\InovaApplicationTests.class
 com\Inova\Inova\Infra\Security\SecurityFilterTest.class
+com\Inova\Inova\Controller\UserControllerTest.class
 com\Inova\Inova\Service\IdeaServiceTest.class

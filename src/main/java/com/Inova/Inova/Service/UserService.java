@@ -20,16 +20,16 @@ public class UserService {
         try {
             UserEntity user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("Usuario nao encontrado"));
 
-            if (role != null) {
-                user.setRole(role);
-                userRepository.save(user);
-
-                return "Usuario alterado para " + role.name();
+            if (role == null) {
+                throw new RuntimeException("Role nao pode ser nula");
             }
 
-            return "Role nao esta presente";
+            user.setRole(role);
+            userRepository.save(user);
+
+            return "Usuario alterado para " + role.name();
         } catch (Exception e) {
-            throw new RuntimeException("erro ao alterar usuario " + e.getMessage());
+            throw new RuntimeException("Erro ao alterar usuario: " + e.getMessage());
         }
     }
 
