@@ -10,9 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -53,4 +51,6 @@ public class IdeaEntity {
     @JsonIgnoreProperties({"eventos", "ideia"})
     private Set<UserEntity> jurados = new HashSet<>();
 
+    @ElementCollection
+    private Map<UUID, Integer> notasJurados = new HashMap<>();
 }

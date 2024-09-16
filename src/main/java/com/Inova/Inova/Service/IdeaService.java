@@ -33,7 +33,7 @@ public class IdeaService {
             Set<UUID> colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());
 
             Set<UserEntity> colaboradores = colaboradoresIds.stream().map(id -> userRepository.findById(id)
-                            .orElseThrow(() -> new RuntimeException("Colaborador não encontrado com ID: " + id))).collect(Collectors.toSet());
+                    .orElseThrow(() -> new RuntimeException("Colaborador não encontrado com ID: " + id))).collect(Collectors.toSet());
 
             ideia.setColaboradores(colaboradores);
             ideia.setEvento(evento);
@@ -59,7 +59,7 @@ public class IdeaService {
         }
     }
 
-    public void distribuirIdeias(UUID id_evento){
+    public void distribuirIdeias(UUID id_evento) {
         try {
             EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -> new RuntimeException("Evento nao encontrado"));
 
@@ -82,8 +82,30 @@ public class IdeaService {
                 ideia.getJurados().add(jurado);
                 ideaRepository.save(ideia);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Erro ao distribuir ideias: " + e.getMessage());
         }
     }
+
+    public void avaliarIdeia(UUID id_ideia, UUID id_jurado, int nota) {
+        if (nota < 3 || nota > 10) {
+            throw new IllegalArgumentException("A nota deve ser entre 3 e 10.");
+        }
+
+        IdeaEntity ideia = ideaRepository.findById(id_ideia)
+                .orElseThrow(() -> new RuntimeException("Ideia não encontrada"));
+        UserEntity jurado = userRepository.findById(id_jurado)
+                .orElseThrow(() -> new RuntimeException("Jurado não encontrado"));
+
+        if (!ideia.getJurados().contains(jurado)) {
+            throw new RuntimeException("Este jurado não tem permissão para avaliar esta ideia");
+        }
+
+        ideia.getNotasJurados().put(jurado.getId(), nota);
+        jurado.getAvaliacoes().add(ideia);
+
+        ideaRepository.save(ideia);
+        userRepository.save(jurado);
+    }
+
 }

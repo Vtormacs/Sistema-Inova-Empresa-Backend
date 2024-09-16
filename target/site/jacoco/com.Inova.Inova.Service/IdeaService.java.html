@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 <span class="fc" id="L33">            Set&lt;UUID&gt; colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());</span>
 
 <span class="fc" id="L35">            Set&lt;UserEntity&gt; colaboradores = colaboradoresIds.stream().map(id -&gt; userRepository.findById(id)</span>
-<span class="fc" id="L36">                            .orElseThrow(() -&gt; new RuntimeException(&quot;Colaborador não encontrado com ID: &quot; + id))).collect(Collectors.toSet());</span>
+<span class="fc" id="L36">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Colaborador não encontrado com ID: &quot; + id))).collect(Collectors.toSet());</span>
 
 <span class="fc" id="L38">            ideia.setColaboradores(colaboradores);</span>
 <span class="fc" id="L39">            ideia.setEvento(evento);</span>
@@ -59,7 +59,7 @@ import java.util.stream.Collectors;
         }
     }
 
-    public void distribuirIdeias(UUID id_evento){
+    public void distribuirIdeias(UUID id_evento) {
         try {
 <span class="fc" id="L64">            EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -&gt; new RuntimeException(&quot;Evento nao encontrado&quot;));</span>
 
@@ -82,9 +82,31 @@ import java.util.stream.Collectors;
 <span class="fc" id="L82">                ideia.getJurados().add(jurado);</span>
 <span class="fc" id="L83">                ideaRepository.save(ideia);</span>
             }
-<span class="fc" id="L85">        }catch (Exception e){</span>
+<span class="fc" id="L85">        } catch (Exception e) {</span>
 <span class="fc" id="L86">            throw new RuntimeException(&quot;Erro ao distribuir ideias: &quot; + e.getMessage());</span>
 <span class="fc" id="L87">        }</span>
 <span class="fc" id="L88">    }</span>
+
+    public void avaliarIdeia(UUID id_ideia, UUID id_jurado, int nota) {
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">        if (nota &lt; 3 || nota &gt; 10) {</span>
+<span class="fc" id="L92">            throw new IllegalArgumentException(&quot;A nota deve ser entre 3 e 10.&quot;);</span>
+        }
+
+<span class="fc" id="L95">        IdeaEntity ideia = ideaRepository.findById(id_ideia)</span>
+<span class="fc" id="L96">                .orElseThrow(() -&gt; new RuntimeException(&quot;Ideia não encontrada&quot;));</span>
+<span class="fc" id="L97">        UserEntity jurado = userRepository.findById(id_jurado)</span>
+<span class="fc" id="L98">                .orElseThrow(() -&gt; new RuntimeException(&quot;Jurado não encontrado&quot;));</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (!ideia.getJurados().contains(jurado)) {</span>
+<span class="fc" id="L101">            throw new RuntimeException(&quot;Este jurado não tem permissão para avaliar esta ideia&quot;);</span>
+        }
+
+<span class="fc" id="L104">        ideia.getNotasJurados().put(jurado.getId(), nota);</span>
+<span class="fc" id="L105">        jurado.getAvaliacoes().add(ideia);</span>
+
+<span class="fc" id="L107">        ideaRepository.save(ideia);</span>
+<span class="fc" id="L108">        userRepository.save(jurado);</span>
+<span class="fc" id="L109">    }</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

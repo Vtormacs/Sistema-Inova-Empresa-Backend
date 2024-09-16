@@ -46,4 +46,16 @@ public class IdeaController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/avaliar")
+    public ResponseEntity<String> avaliarIdeia(@RequestParam UUID id_ideia, @RequestParam UUID id_jurado, @RequestParam int nota) {
+        try {
+            ideaService.avaliarIdeia(id_ideia, id_jurado, nota);
+            return ResponseEntity.ok("Avaliação registrada com sucesso.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

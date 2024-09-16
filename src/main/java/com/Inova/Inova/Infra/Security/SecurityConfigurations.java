@@ -36,6 +36,7 @@ public class SecurityConfigurations {
                         .requestMatchers(HttpMethod.GET, "/api/user/listar-usuarios").hasRole("COLABORADOR")
                         .requestMatchers(HttpMethod.POST, "/api/idea/postar-ideia").hasRole("COLABORADOR")
                         .requestMatchers(HttpMethod.POST, "/api/idea/listar-ideias").hasRole("COLABORADOR")
+                        .requestMatchers(HttpMethod.POST, "/api/idea/avaliar").hasRole("AVALIADOR")
                         .requestMatchers(HttpMethod.POST, "/api/event/listar-eventos").hasRole("COLABORADOR")
                         .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

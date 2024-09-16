@@ -53,8 +53,10 @@ public class UserEntity implements UserDetails {
     @JsonIgnoreProperties({"jurados", "ideias"})
     private Set<EventEntity> eventos;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "jurados")
+    @JsonIgnoreProperties({"jurados", "ideias", "colaboradores"})
     private Set<IdeaEntity> avaliacoes = new HashSet<>();
+
 
     public UserEntity(String nome, String email, String senha, Role role) {
         this.nome = nome;

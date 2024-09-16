@@ -7,13 +7,14 @@ import com.Inova.Inova.Entities.UserEntity;
 import com.Inova.Inova.Repository.EventRepository;
 import com.Inova.Inova.Repository.IdeaRepository;
 import com.Inova.Inova.Repository.UserRepository;
+import com.Inova.Inova.Service.IdeaService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -31,11 +32,14 @@ class IdeaControllerTest {
     @MockBean
     UserRepository userRepository;
 
+    @MockBean
+    EventRepository eventRepository;
+
     @Autowired
     IdeaController ideaController;
 
-    @MockBean
-    EventRepository eventRepository;
+    @Autowired
+    IdeaService ideaService;
 
     UUID idEvento;
     EventEntity evento;
@@ -55,10 +59,10 @@ class IdeaControllerTest {
 
         jurados = new HashSet<>(Arrays.asList(jurado1, jurado2));
 
-        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null);
+        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null);
         ideia1.setJurados(new HashSet<>());
 
-        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null);
+        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null);
         ideia2.setJurados(new HashSet<>());
 
         ideias = new HashSet<>(Arrays.asList(ideia1, ideia2));
@@ -76,7 +80,7 @@ class IdeaControllerTest {
         UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null);
         UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
 
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null);
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null, null);
 
         when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
         when(userRepository.findById(colaborador2.getId())).thenReturn(Optional.of(colaborador2));
@@ -111,7 +115,7 @@ class IdeaControllerTest {
     }
 
     @Test
-    void findAll_Erro(){
+    void findAll_Erro() {
         when(ideaRepository.findAll()).thenThrow(new RuntimeException("Erro ao listar ideias"));
 
         var resultado = ideaController.findAll();
@@ -148,5 +152,59 @@ class IdeaControllerTest {
         var response = ideaController.distribuirIdeias(idEvento);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+    }
+
+
+    @Test
+    void avaliarIdeiaComNotaInvalida() {
+        int nota = 2; // Nota abaixo do mínimo permitido
+        UUID idIdeia = ideia1.getId();
+        UUID idJurado = jurado1.getId();
+
+        var response = ideaController.avaliarIdeia(idIdeia, idJurado, nota);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("A nota deve ser entre 3 e 10.", response.getBody());
+    }
+
+    @Test
+    void avaliarIdeiaComIdeiaNaoEncontrada() {
+        UUID idIdeiaInvalido = UUID.randomUUID();
+        UUID idJurado = jurado1.getId();
+
+        when(ideaRepository.findById(idIdeiaInvalido)).thenReturn(Optional.empty());
+
+        var response = ideaController.avaliarIdeia(idIdeiaInvalido, idJurado, 5);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Ideia não encontrada", response.getBody());
+    }
+
+    @Test
+    void avaliarIdeiaComJuradoNaoEncontrado() {
+        UUID idIdeia = ideia1.getId();
+        UUID idJuradoInvalido = UUID.randomUUID();
+
+        when(userRepository.findById(idJuradoInvalido)).thenReturn(Optional.empty());
+
+        var response = ideaController.avaliarIdeia(idIdeia, idJuradoInvalido, 5);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Ideia não encontrada", response.getBody());
+    }
+
+    @Test
+    void avaliarIdeiaJuradoSemPermissao() {
+        UUID idIdeia = ideia1.getId();
+        UUID idJuradoSemPermissao = UUID.randomUUID();
+        UserEntity juradoSemPermissao = new UserEntity(idJuradoSemPermissao, "Jurado Sem Permissao", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+
+        when(userRepository.findById(idJuradoSemPermissao)).thenReturn(Optional.of(juradoSemPermissao));
+        when(ideaRepository.findById(idIdeia)).thenReturn(Optional.of(ideia1));
+
+        var response = ideaController.avaliarIdeia(idIdeia, idJuradoSemPermissao, 5);
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals("Este jurado não tem permissão para avaliar esta ideia", response.getBody());
     }
 }
