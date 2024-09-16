@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.Inova.Inova.Controller.EventControllerTest" time="5.158" tests="6" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.Inova.Inova.Controller.AuthenticationControllerTest" time="1.139" tests="5" errors="0" skipped="0" failures="0">
   <properties>
     <property name="java.specification.version" value="17"/>
     <property name="sun.cpu.isalist" value="amd64"/>
@@ -10,7 +10,6 @@
     <property name="user.variant" value=""/>
     <property name="java.vendor.url" value="https://java.oracle.com/"/>
     <property name="user.timezone" value="America/Sao_Paulo"/>
-    <property name="org.jboss.logging.provider" value="slf4j"/>
     <property name="os.name" value="Windows 11"/>
     <property name="java.vm.specification.version" value="17"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
@@ -31,8 +30,6 @@
     <property name="line.separator" value="&#10;"/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
-    <property name="FILE_LOG_CHARSET" value="windows-1252"/>
-    <property name="java.awt.headless" value="true"/>
     <property name="surefire.real.class.path" value="C:\Users\vitor\AppData\Local\Temp\surefire14412637307393239065\surefirebooter-20240915210357200_3.jar"/>
     <property name="user.script" value=""/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -46,14 +43,11 @@
     <property name="localRepository" value="C:\Users\vitor\.m2\repository"/>
     <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
     <property name="java.io.tmpdir" value="C:\Users\vitor\AppData\Local\Temp\"/>
-    <property name="com.zaxxer.hikari.pool_number" value="1"/>
     <property name="java.version" value="17.0.12"/>
     <property name="user.dir" value="C:\Users\vitor\Projetos\Sistema-Inova-Empresa-Backend"/>
     <property name="os.arch" value="amd64"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="PID" value="16112"/>
     <property name="sun.os.patch.level" value=""/>
-    <property name="CONSOLE_LOG_CHARSET" value="windows-1252"/>
     <property name="native.encoding" value="Cp1252"/>
     <property name="java.library.path" value="C:\Program Files\Java\jdk-17\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Microsoft VS Code\bin;C:\Program Files\Git\cmd;C:\Program Files\dotnet\;C:\Program Files\Process Lasso\;C:\apache-maven-3.9.8\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\MySQL\MySQL Shell 8.0\bin\;C:\Users\vitor\AppData\Local\Microsoft\WindowsApps;;C:\Users\vitor\AppData\Local\Programs\Ollama;."/>
     <property name="java.vm.info" value="mixed mode, sharing"/>
@@ -62,44 +56,9 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="61.0"/>
   </properties>
-  <testcase name="criarEvento" classname="com.Inova.Inova.Controller.EventControllerTest" time="0.013">
-    <system-out><![CDATA[21:03:59.343 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.Inova.Inova.Controller.EventControllerTest]: EventControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
-21:03:59.508 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.Inova.Inova.InovaApplication for test class com.Inova.Inova.Controller.EventControllerTest
-
-  .   ____          _            __ _ _
- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
-  '  |____| .__|_| |_|_| |_\__, | / / / /
- =========|_|==============|___/=/_/_/_/
-
- :: Spring Boot ::                (v3.3.3)
-
-2024-09-15T21:03:59.995-03:00  INFO 16112 --- [           main] c.I.I.Controller.EventControllerTest     : Starting EventControllerTest using Java 17.0.12 with PID 16112 (started by vitor in C:\Users\vitor\Projetos\Sistema-Inova-Empresa-Backend)
-2024-09-15T21:03:59.996-03:00  INFO 16112 --- [           main] c.I.I.Controller.EventControllerTest     : No active profile set, falling back to 1 default profile: "default"
-2024-09-15T21:04:00.688-03:00  INFO 16112 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2024-09-15T21:04:00.757-03:00  INFO 16112 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 56 ms. Found 3 JPA repository interfaces.
-2024-09-15T21:04:01.444-03:00  INFO 16112 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2024-09-15T21:04:01.523-03:00  INFO 16112 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.5.2.Final
-2024-09-15T21:04:01.567-03:00  INFO 16112 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2024-09-15T21:04:01.729-03:00  INFO 16112 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2024-09-15T21:04:01.761-03:00  INFO 16112 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2024-09-15T21:04:02.073-03:00  INFO 16112 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@31ec9703
-2024-09-15T21:04:02.075-03:00  INFO 16112 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2024-09-15T21:04:03.225-03:00  INFO 16112 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2024-09-15T21:04:03.329-03:00  INFO 16112 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2024-09-15T21:04:03.380-03:00  INFO 16112 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name authorizationService
-2024-09-15T21:04:03.642-03:00  WARN 16112 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2024-09-15T21:04:04.231-03:00  INFO 16112 --- [           main] c.I.I.Controller.EventControllerTest     : Started EventControllerTest in 4.535 seconds (process running for 6.933)
-]]></system-out>
-  </testcase>
-  <testcase name="listarEventos_Error" classname="com.Inova.Inova.Controller.EventControllerTest" time="0.004"/>
-  <testcase name="criarEvento_Error" classname="com.Inova.Inova.Controller.EventControllerTest" time="0.003"/>
-  <testcase name="selecaoDeJurados_Success" classname="com.Inova.Inova.Controller.EventControllerTest" time="0.004"/>
-  <testcase name="listarEventos_Success" classname="com.Inova.Inova.Controller.EventControllerTest" time="0.002"/>
-  <testcase name="selecaoDeJurados_Error" classname="com.Inova.Inova.Controller.EventControllerTest" time="0.003">
-    <system-out><![CDATA[Erro ao selecionar jurados: Erro ao salvar jurados
-Erro ao selecionar jurados: Erro ao salvar jurados
-]]></system-out>
-  </testcase>
+  <testcase name="testLogin_Sucesso" classname="com.Inova.Inova.Controller.AuthenticationControllerTest" time="1.071"/>
+  <testcase name="testRegistrar_ErroGenerico" classname="com.Inova.Inova.Controller.AuthenticationControllerTest" time="0.017"/>
+  <testcase name="testRegistrar_Sucesso" classname="com.Inova.Inova.Controller.AuthenticationControllerTest" time="0.005"/>
+  <testcase name="testLogin_Falha" classname="com.Inova.Inova.Controller.AuthenticationControllerTest" time="0.004"/>
+  <testcase name="testRegistrar_EmailJaUsado" classname="com.Inova.Inova.Controller.AuthenticationControllerTest" time="0.003"/>
 </testsuite>

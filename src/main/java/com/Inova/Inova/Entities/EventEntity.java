@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -49,5 +50,8 @@ public class EventEntity {
     @JsonIgnoreProperties({"eventos", "ideia"})
     private Set<UserEntity> jurados;
 
+    @OneToMany(mappedBy = "evento", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"evento"})
+    private Set<IdeaEntity> ideias = new HashSet<>();
 
 }

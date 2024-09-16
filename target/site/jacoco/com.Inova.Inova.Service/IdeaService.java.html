@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IdeaService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Inova</a> &gt; <a href="index.source.html" class="el_package">com.Inova.Inova.Service</a> &gt; <span class="el_source">IdeaService.java</span></div><h1>IdeaService.java</h1><pre class="source lang-java linenums">package com.Inova.Inova.Service;
 
+import com.Inova.Inova.Entities.EventEntity;
 import com.Inova.Inova.Entities.IdeaEntity;
 import com.Inova.Inova.Entities.UserEntity;
+import com.Inova.Inova.Repository.EventRepository;
 import com.Inova.Inova.Repository.IdeaRepository;
 import com.Inova.Inova.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-<span class="fc" id="L13">public class IdeaService {</span>
+<span class="fc" id="L16">public class IdeaService {</span>
 
     @Autowired
     private IdeaRepository ideaRepository;
@@ -18,26 +21,92 @@ import java.util.List;
     @Autowired
     private UserRepository userRepository;
 
-    public IdeaEntity postarIdeia(IdeaEntity ideia) {
+    @Autowired
+    private EventRepository eventRepository;
+
+    public IdeaEntity postarIdeia(IdeaEntity ideia, UUID id_evento) {
         try {
-<span class="fc" id="L23">            UserEntity user = userRepository.findById(ideia.getColaborador().getId()).orElseThrow(() -&gt; new RuntimeException(&quot;Usuario nao encontrado&quot;));</span>
+<span class="fc" id="L29">            EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -&gt; new RuntimeException(&quot;Evento não encontrado&quot;));</span>
 
-<span class="fc" id="L25">            user.setIdeia(ideia);</span>
+<span class="fc" id="L31">            System.out.println(&quot;Evento encontrado: &quot; + evento.getNome());</span>
 
-<span class="fc" id="L27">            ideia.setColaborador(user);</span>
+<span class="fc" id="L33">            Set&lt;UUID&gt; colaboradoresIds = ideia.getColaboradores().stream().map(UserEntity::getId).collect(Collectors.toSet());</span>
 
-<span class="fc" id="L29">            return ideaRepository.save(ideia);</span>
-<span class="fc" id="L30">        } catch (Exception e) {</span>
-<span class="fc" id="L31">            throw new RuntimeException(&quot;Erro postar ideia &quot; + e.getMessage());</span>
+<span class="fc" id="L35">            Set&lt;UserEntity&gt; colaboradores = colaboradoresIds.stream().map(id -&gt; userRepository.findById(id)</span>
+<span class="fc" id="L36">                    .orElseThrow(() -&gt; new RuntimeException(&quot;Colaborador não encontrado com ID: &quot; + id))).collect(Collectors.toSet());</span>
+
+<span class="fc" id="L38">            ideia.setColaboradores(colaboradores);</span>
+<span class="fc" id="L39">            ideia.setEvento(evento);</span>
+<span class="fc" id="L40">            colaboradores.forEach(colaborador -&gt; colaborador.setIdeia(ideia));</span>
+<span class="fc" id="L41">            evento.getIdeias().add(ideia);</span>
+
+<span class="fc" id="L43">            System.out.println(&quot;Colaboradores da ideia: &quot; + colaboradores.size());</span>
+
+<span class="fc" id="L45">            IdeaEntity ideiaSalva = ideaRepository.save(ideia);</span>
+<span class="fc" id="L46">            eventRepository.save(evento);</span>
+
+<span class="fc" id="L48">            return ideiaSalva;</span>
+<span class="fc" id="L49">        } catch (Exception e) {</span>
+<span class="fc" id="L50">            throw new RuntimeException(&quot;Erro ao postar ideia: &quot; + e.getMessage());</span>
         }
     }
 
     public List&lt;IdeaEntity&gt; findAll() {
         try {
-<span class="fc" id="L37">            return ideaRepository.findAll();</span>
-<span class="fc" id="L38">        } catch (Exception e) {</span>
-<span class="fc" id="L39">            throw new RuntimeException(&quot;erro ao listar as ideias &quot; + e.getMessage());</span>
+<span class="fc" id="L56">            return ideaRepository.findAll();</span>
+<span class="fc" id="L57">        } catch (Exception e) {</span>
+<span class="fc" id="L58">            throw new RuntimeException(&quot;erro ao listar as ideias &quot; + e.getMessage());</span>
         }
     }
+
+    public void distribuirIdeias(UUID id_evento) {
+        try {
+<span class="fc" id="L64">            EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -&gt; new RuntimeException(&quot;Evento nao encontrado&quot;));</span>
+
+<span class="fc" id="L66">            Set&lt;UserEntity&gt; jurados = evento.getJurados();</span>
+<span class="fc" id="L67">            Set&lt;IdeaEntity&gt; ideias = evento.getIdeias();</span>
+
+<span class="pc bpc" id="L69" title="1 of 4 branches missed.">            if (jurados.isEmpty() || ideias.isEmpty()) {</span>
+<span class="fc" id="L70">                throw new RuntimeException(&quot;Não há jurados ou ideias suficientes para distribuir&quot;);</span>
+            }
+
+<span class="fc" id="L73">            List&lt;UserEntity&gt; juradosList = new ArrayList&lt;&gt;(jurados);</span>
+<span class="fc" id="L74">            List&lt;IdeaEntity&gt; ideiasList = new ArrayList&lt;&gt;(ideias);</span>
+
+<span class="fc" id="L76">            Collections.shuffle(ideiasList);</span>
+
+<span class="fc" id="L78">            int numJurados = juradosList.size();</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            for (int i = 0; i &lt; ideiasList.size(); i++) {</span>
+<span class="fc" id="L80">                UserEntity jurado = juradosList.get(i % numJurados);</span>
+<span class="fc" id="L81">                IdeaEntity ideia = ideiasList.get(i);</span>
+<span class="fc" id="L82">                ideia.getJurados().add(jurado);</span>
+<span class="fc" id="L83">                ideaRepository.save(ideia);</span>
+            }
+<span class="fc" id="L85">        } catch (Exception e) {</span>
+<span class="fc" id="L86">            throw new RuntimeException(&quot;Erro ao distribuir ideias: &quot; + e.getMessage());</span>
+<span class="fc" id="L87">        }</span>
+<span class="fc" id="L88">    }</span>
+
+    public void avaliarIdeia(UUID id_ideia, UUID id_jurado, int nota) {
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">        if (nota &lt; 3 || nota &gt; 10) {</span>
+<span class="fc" id="L92">            throw new IllegalArgumentException(&quot;A nota deve ser entre 3 e 10.&quot;);</span>
+        }
+
+<span class="fc" id="L95">        IdeaEntity ideia = ideaRepository.findById(id_ideia)</span>
+<span class="fc" id="L96">                .orElseThrow(() -&gt; new RuntimeException(&quot;Ideia não encontrada&quot;));</span>
+<span class="fc" id="L97">        UserEntity jurado = userRepository.findById(id_jurado)</span>
+<span class="fc" id="L98">                .orElseThrow(() -&gt; new RuntimeException(&quot;Jurado não encontrado&quot;));</span>
+
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        if (!ideia.getJurados().contains(jurado)) {</span>
+<span class="fc" id="L101">            throw new RuntimeException(&quot;Este jurado não tem permissão para avaliar esta ideia&quot;);</span>
+        }
+
+<span class="fc" id="L104">        ideia.getNotasJurados().put(jurado.getId(), nota);</span>
+<span class="fc" id="L105">        jurado.getAvaliacoes().add(ideia);</span>
+
+<span class="fc" id="L107">        ideaRepository.save(ideia);</span>
+<span class="fc" id="L108">        userRepository.save(jurado);</span>
+<span class="fc" id="L109">    }</span>
+
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

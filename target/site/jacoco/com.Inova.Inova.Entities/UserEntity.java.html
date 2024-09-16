@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -48,40 +45,44 @@ public class UserEntity implements UserDetails {
     @Column
     private Role role;
 
-    @OneToOne
-    @JsonIgnoreProperties({&quot;colaborador&quot;})
+    @ManyToOne
+    @JsonIgnoreProperties({&quot;colaboradores&quot;, &quot;jurados&quot;})
     private IdeaEntity ideia;
 
     @ManyToMany(mappedBy = &quot;jurados&quot;)
-    @JsonIgnoreProperties({&quot;jurados&quot;})
+    @JsonIgnoreProperties({&quot;jurados&quot;, &quot;ideias&quot;})
     private Set&lt;EventEntity&gt; eventos;
 
+<span class="fc" id="L56">    @ManyToMany(mappedBy = &quot;jurados&quot;)</span>
+    @JsonIgnoreProperties({&quot;jurados&quot;, &quot;ideias&quot;, &quot;colaboradores&quot;})
+    private Set&lt;IdeaEntity&gt; avaliacoes = new HashSet&lt;&gt;();
 
-<span class="fc" id="L60">    public UserEntity(String nome, String email, String senha, Role role) {</span>
-<span class="fc" id="L61">        this.nome = nome;</span>
-<span class="fc" id="L62">        this.email = email;</span>
-<span class="fc" id="L63">        this.senha = senha;</span>
-<span class="fc" id="L64">        this.role = role;</span>
-<span class="fc" id="L65">    }</span>
+
+<span class="fc" id="L61">    public UserEntity(String nome, String email, String senha, Role role) {</span>
+<span class="fc" id="L62">        this.nome = nome;</span>
+<span class="fc" id="L63">        this.email = email;</span>
+<span class="fc" id="L64">        this.senha = senha;</span>
+<span class="fc" id="L65">        this.role = role;</span>
+<span class="fc" id="L66">    }</span>
 
     @Override
     public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
-<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (this.role == Role.ADMIN) {</span>
-<span class="fc" id="L70">            return List.of(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;), new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;), new SimpleGrantedAuthority(&quot;ROLE_AVALIADOR&quot;));</span>
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (this.role == Role.ADMIN) {</span>
+<span class="fc" id="L71">            return List.of(new SimpleGrantedAuthority(&quot;ROLE_ADMIN&quot;), new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;), new SimpleGrantedAuthority(&quot;ROLE_AVALIADOR&quot;));</span>
         }
-<span class="pc bpc" id="L72" title="1 of 2 branches missed.">        if (this.role == Role.AVALIADOR) {</span>
-<span class="nc" id="L73">            return List.of(new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;), new SimpleGrantedAuthority(&quot;ROLE_AVALIADOR&quot;));</span>
-<span class="fc" id="L74">        } else return List.of(new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;));</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (this.role == Role.AVALIADOR) {</span>
+<span class="nc" id="L74">            return List.of(new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;), new SimpleGrantedAuthority(&quot;ROLE_AVALIADOR&quot;));</span>
+<span class="fc" id="L75">        } else return List.of(new SimpleGrantedAuthority(&quot;ROLE_COLABORADOR&quot;));</span>
     }
 
     @Override
     public String getPassword() {
-<span class="fc" id="L79">        return senha;</span>
+<span class="fc" id="L80">        return senha;</span>
     }
 
     @Override
     public String getUsername() {
-<span class="fc" id="L84">        return email;</span>
+<span class="fc" id="L85">        return email;</span>
     }
 
     // associations

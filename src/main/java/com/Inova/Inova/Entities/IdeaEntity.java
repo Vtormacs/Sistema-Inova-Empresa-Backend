@@ -10,7 +10,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @Setter
@@ -33,7 +33,24 @@ public class IdeaEntity {
 
     private String descricao;
 
-    @OneToOne
-    @JsonIgnoreProperties({"senha", "eventos", "ideia", "password", "username", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
-    private UserEntity colaborador;
+    @OneToMany
+    @JsonIgnoreProperties({"senha", "eventos", "ideia", "avaliacoes" ,"password", "username", "authorities", "enabled", "credentialsNonExpired", "accountNonExpired", "accountNonLocked"})
+    private Set<UserEntity> colaboradores;
+
+    @ManyToOne
+    @JoinColumn(name = "evento_id")
+    @JsonIgnoreProperties({"ideias", "jurados"})
+    private EventEntity evento;
+
+    @ManyToMany
+    @JoinTable(
+            name = "ideia_jurados",
+            joinColumns = @JoinColumn(name = "ideia_id"),
+            inverseJoinColumns = @JoinColumn(name = "jurado_id")
+    )
+    @JsonIgnoreProperties({"eventos", "ideia"})
+    private Set<UserEntity> jurados = new HashSet<>();
+
+    @ElementCollection
+    private Map<UUID, Integer> notasJurados = new HashMap<>();
 }

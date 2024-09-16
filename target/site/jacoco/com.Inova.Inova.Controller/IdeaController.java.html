@@ -2,37 +2,61 @@
 
 import com.Inova.Inova.Entities.IdeaEntity;
 import com.Inova.Inova.Service.IdeaService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @RestController
 @RequestMapping(&quot;/api/idea&quot;)
-<span class="fc" id="L14">public class IdeaController {</span>
+<span class="fc" id="L17">public class IdeaController {</span>
 
     @Autowired
     private IdeaService ideaService;
 
     @PostMapping(&quot;/postar-ideia&quot;)
-    public ResponseEntity&lt;IdeaEntity&gt; postarIdeia(@RequestBody IdeaEntity ideia) {
+    public ResponseEntity&lt;IdeaEntity&gt; postarIdeia(@RequestBody IdeaEntity ideia, @RequestParam UUID id_evento) {
         try {
-<span class="fc" id="L22">            return ResponseEntity.ok(ideaService.postarIdeia(ideia));</span>
-<span class="fc" id="L23">        } catch (Exception e) {</span>
-<span class="fc" id="L24">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L25">            return ResponseEntity.ok(ideaService.postarIdeia(ideia, id_evento));</span>
+<span class="fc" id="L26">        } catch (Exception e) {</span>
+<span class="fc" id="L27">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
     @GetMapping(&quot;/listar-ideias&quot;)
     public ResponseEntity&lt;List&lt;IdeaEntity&gt;&gt; findAll() {
         try {
-<span class="fc" id="L31">            return ResponseEntity.ok(ideaService.findAll());</span>
-<span class="fc" id="L32">        } catch (Exception e) {</span>
-<span class="fc" id="L33">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L34">            return ResponseEntity.ok(ideaService.findAll());</span>
+<span class="fc" id="L35">        } catch (Exception e) {</span>
+<span class="fc" id="L36">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
+    @PostMapping(&quot;/distribuir-ideias&quot;)
+    public ResponseEntity&lt;Void&gt; distribuirIdeias(@RequestParam UUID id_evento) {
+        try {
+<span class="fc" id="L43">            ideaService.distribuirIdeias(id_evento);</span>
+<span class="fc" id="L44">            return ResponseEntity.ok().build();</span>
+<span class="fc" id="L45">        } catch (Exception e) {</span>
+<span class="fc" id="L46">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+
+    @PostMapping(&quot;/avaliar&quot;)
+    public ResponseEntity&lt;String&gt; avaliarIdeia(@RequestParam UUID id_ideia, @RequestParam UUID id_jurado, @RequestParam int nota) {
+        try {
+<span class="nc" id="L53">            ideaService.avaliarIdeia(id_ideia, id_jurado, nota);</span>
+<span class="nc" id="L54">            return ResponseEntity.ok(&quot;Avaliação registrada com sucesso.&quot;);</span>
+<span class="fc" id="L55">        } catch (IllegalArgumentException e) {</span>
+<span class="fc" id="L56">            return ResponseEntity.badRequest().body(e.getMessage());</span>
+<span class="fc" id="L57">        } catch (RuntimeException e) {</span>
+<span class="fc" id="L58">            return ResponseEntity.badRequest().body(e.getMessage());</span>
+        }
+    }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

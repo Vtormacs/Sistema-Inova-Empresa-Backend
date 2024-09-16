@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="pt"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>EventService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Inova</a> &gt; <a href="index.source.html" class="el_package">com.Inova.Inova.Service</a> &gt; <span class="el_source">EventService.java</span></div><h1>EventService.java</h1><pre class="source lang-java linenums">package com.Inova.Inova.Service;
 
+import com.Inova.Inova.Entities.Enum.Role;
 import com.Inova.Inova.Entities.EventEntity;
 import com.Inova.Inova.Entities.UserEntity;
 import com.Inova.Inova.Repository.EventRepository;
@@ -13,7 +14,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-<span class="fc" id="L16">public class EventService {</span>
+<span class="fc" id="L17">public class EventService {</span>
 
     @Autowired
     private EventRepository eventRepository;
@@ -23,37 +24,38 @@ import java.util.stream.Collectors;
 
     public EventEntity criarEvento(EventEntity evento) {
         try {
-<span class="fc" id="L26">            return eventRepository.save(evento);</span>
-<span class="fc" id="L27">        } catch (Exception e) {</span>
-<span class="fc" id="L28">            throw new RuntimeException(&quot;Erro ao criar evento &quot; + e.getMessage());</span>
+<span class="fc" id="L27">            return eventRepository.save(evento);</span>
+<span class="fc" id="L28">        } catch (Exception e) {</span>
+<span class="fc" id="L29">            throw new RuntimeException(&quot;Erro ao criar evento &quot; + e.getMessage());</span>
         }
     }
 
     public EventEntity selecaoDeJurados(List&lt;UUID&gt; ids, UUID idDoEvento) {
         try {
-<span class="fc" id="L34">            EventEntity eventoSelecionado = eventRepository.findById(idDoEvento).orElseThrow(() -&gt; new RuntimeException(&quot;Evento não encontrado&quot;));</span>
+<span class="fc" id="L35">            EventEntity eventoSelecionado = eventRepository.findById(idDoEvento).orElseThrow(() -&gt; new RuntimeException(&quot;Evento não encontrado&quot;));</span>
 
-<span class="fc" id="L36">            Set&lt;UserEntity&gt; jurados = ids.stream().map(id -&gt; {</span>
-<span class="fc" id="L37">                UserEntity jurado = userRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Jurado com ID &quot; + id + &quot; não encontrado&quot;));</span>
-<span class="fc" id="L38">                return jurado;</span>
-<span class="fc" id="L39">            }).collect(Collectors.toSet());</span>
+<span class="fc" id="L37">            Set&lt;UserEntity&gt; jurados = ids.stream().map(id -&gt; {</span>
+<span class="fc" id="L38">                UserEntity jurado = userRepository.findById(id).orElseThrow(() -&gt; new RuntimeException(&quot;Jurado com ID &quot; + id + &quot; não encontrado&quot;));</span>
+<span class="fc" id="L39">                jurado.setRole(Role.AVALIADOR);</span>
+<span class="fc" id="L40">                return jurado;</span>
+<span class="fc" id="L41">            }).collect(Collectors.toSet());</span>
 
-<span class="fc" id="L41">            eventoSelecionado.setJurados(jurados);</span>
+<span class="fc" id="L43">            eventoSelecionado.setJurados(jurados);</span>
 
-<span class="fc" id="L43">            EventEntity eventoAtualizado = eventRepository.save(eventoSelecionado);</span>
+<span class="fc" id="L45">            EventEntity eventoAtualizado = eventRepository.save(eventoSelecionado);</span>
 
-<span class="fc" id="L45">            return eventoAtualizado;</span>
-<span class="fc" id="L46">        } catch (Exception e) {</span>
-<span class="fc" id="L47">            System.out.println(&quot;Erro ao selecionar jurados: &quot; + e.getMessage());</span>
-<span class="fc" id="L48">            throw new RuntimeException(&quot;Erro ao selecionar jurados: &quot; + e.getMessage());</span>
+<span class="fc" id="L47">            return eventoAtualizado;</span>
+<span class="fc" id="L48">        } catch (Exception e) {</span>
+<span class="fc" id="L49">            System.out.println(&quot;Erro ao selecionar jurados: &quot; + e.getMessage());</span>
+<span class="fc" id="L50">            throw new RuntimeException(&quot;Erro ao selecionar jurados: &quot; + e.getMessage());</span>
         }
     }
 
     public List&lt;EventEntity&gt; findAll() {
         try {
-<span class="fc" id="L54">            return eventRepository.findAll();</span>
-<span class="fc" id="L55">        } catch (Exception e) {</span>
-<span class="fc" id="L56">            throw new RuntimeException(&quot;Erro ao listar eventos &quot; + e.getMessage());</span>
+<span class="fc" id="L56">            return eventRepository.findAll();</span>
+<span class="fc" id="L57">        } catch (Exception e) {</span>
+<span class="fc" id="L58">            throw new RuntimeException(&quot;Erro ao listar eventos &quot; + e.getMessage());</span>
         }
     }
 }

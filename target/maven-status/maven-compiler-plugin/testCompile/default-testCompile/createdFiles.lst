@@ -1,9 +1,10 @@
-com\Inova\Inova\Infra\Token\TokenServiceTest.class
 com\Inova\Inova\Service\EventServiceTest.class
 com\Inova\Inova\Controller\IdeaControllerTest.class
 com\Inova\Inova\Entities\UserEntityTest.class
-com\Inova\Inova\Service\AuthorizationServiceTest.class
 com\Inova\Inova\Service\AuthenticationServiceTest.class
+com\Inova\Inova\Controller\AuthenticationControllerTest.class
+com\Inova\Inova\Infra\Token\TokenServiceTest.class
+com\Inova\Inova\Service\AuthorizationServiceTest.class
 com\Inova\Inova\Service\UserServiceTest.class
 com\Inova\Inova\Controller\EventControllerTest.class
 com\Inova\Inova\InovaApplicationTests.class
