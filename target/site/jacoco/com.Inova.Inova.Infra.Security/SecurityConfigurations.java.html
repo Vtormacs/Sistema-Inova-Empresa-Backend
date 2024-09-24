@@ -35,22 +35,24 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 <span class="fc" id="L35">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/distribuir-ideias&quot;).hasRole(&quot;ADMIN&quot;)</span>
 <span class="fc" id="L36">                        .requestMatchers(HttpMethod.GET, &quot;/api/user/listar-usuarios&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
 <span class="fc" id="L37">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/postar-ideia&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
-<span class="fc" id="L38">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/listar-ideias&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
-<span class="fc" id="L39">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/avaliar&quot;).hasRole(&quot;AVALIADOR&quot;)</span>
-<span class="fc" id="L40">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/listar-eventos&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
-<span class="fc" id="L41">                        .anyRequest().authenticated())</span>
-<span class="fc" id="L42">                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)</span>
-<span class="fc" id="L43">                .build();</span>
+<span class="fc" id="L38">                        .requestMatchers(HttpMethod.GET, &quot;/api/idea/listar-ideias&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
+<span class="fc" id="L39">                        .requestMatchers(HttpMethod.GET, &quot;/api/idea/top-ideias-votadas&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
+<span class="fc" id="L40">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/avaliar&quot;).hasRole(&quot;AVALIADOR&quot;)</span>
+<span class="fc" id="L41">                        .requestMatchers(HttpMethod.POST, &quot;/api/event/listar-eventos&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
+<span class="fc" id="L42">                        .requestMatchers(HttpMethod.POST, &quot;/api/idea/voto-popular&quot;).hasRole(&quot;COLABORADOR&quot;)</span>
+<span class="fc" id="L43">                        .anyRequest().authenticated())</span>
+<span class="fc" id="L44">                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)</span>
+<span class="fc" id="L45">                .build();</span>
     }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-<span class="fc" id="L48">        return authenticationConfiguration.getAuthenticationManager();</span>
+<span class="fc" id="L50">        return authenticationConfiguration.getAuthenticationManager();</span>
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-<span class="fc" id="L53">        return new BCryptPasswordEncoder();</span>
+<span class="fc" id="L55">        return new BCryptPasswordEncoder();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

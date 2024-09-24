@@ -57,6 +57,14 @@ public class UserEntity implements UserDetails {
     @JsonIgnoreProperties({"jurados", "ideias", "colaboradores"})
     private Set<IdeaEntity> avaliacoes = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_votes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "idea_id")
+    )
+    @JsonIgnoreProperties({"colaboradores", "jurados", "evento"})
+    private Set<IdeaEntity> ideiasVotadas = new HashSet<>();
 
     public UserEntity(String nome, String email, String senha, Role role) {
         this.nome = nome;

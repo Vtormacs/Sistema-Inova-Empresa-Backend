@@ -53,4 +53,6 @@ public class IdeaEntity {
 
     @ElementCollection
     private Map<UUID, Integer> notasJurados = new HashMap<>();
+
+    private int votos = 0;
 }

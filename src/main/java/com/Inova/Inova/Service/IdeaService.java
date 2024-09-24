@@ -59,6 +59,14 @@ public class IdeaService {
         }
     }
 
+    public List<IdeaEntity> top10Votados() {
+        try {
+            return ideaRepository.top10Votados();
+        } catch (Exception e) {
+            throw new RuntimeException("erro ao listar as ideias " + e.getMessage());
+        }
+    }
+
     public void distribuirIdeias(UUID id_evento) {
         try {
             EventEntity evento = eventRepository.findById(id_evento).orElseThrow(() -> new RuntimeException("Evento nao encontrado"));
@@ -88,24 +96,53 @@ public class IdeaService {
     }
 
     public void avaliarIdeia(UUID id_ideia, UUID id_jurado, int nota) {
-        if (nota < 3 || nota > 10) {
-            throw new IllegalArgumentException("A nota deve ser entre 3 e 10.");
+        try {
+
+            if (nota < 3 || nota > 10) {
+                throw new IllegalArgumentException("A nota deve ser entre 3 e 10.");
+            }
+
+            IdeaEntity ideia = ideaRepository.findById(id_ideia).orElseThrow(() -> new RuntimeException("Ideia não encontrada"));
+            UserEntity jurado = userRepository.findById(id_jurado).orElseThrow(() -> new RuntimeException("Jurado não encontrado"));
+
+            if (!ideia.getJurados().contains(jurado)) {
+                throw new RuntimeException("Este jurado não tem permissão para avaliar esta ideia");
+            }
+
+            ideia.getNotasJurados().put(jurado.getId(), nota);
+            jurado.getAvaliacoes().add(ideia);
+
+            ideaRepository.save(ideia);
+            userRepository.save(jurado);
+
+            calcularMediaNotas(id_ideia);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao avaliar ideia: " + e.getMessage());
         }
-
-        IdeaEntity ideia = ideaRepository.findById(id_ideia)
-                .orElseThrow(() -> new RuntimeException("Ideia não encontrada"));
-        UserEntity jurado = userRepository.findById(id_jurado)
-                .orElseThrow(() -> new RuntimeException("Jurado não encontrado"));
-
-        if (!ideia.getJurados().contains(jurado)) {
-            throw new RuntimeException("Este jurado não tem permissão para avaliar esta ideia");
-        }
-
-        ideia.getNotasJurados().put(jurado.getId(), nota);
-        jurado.getAvaliacoes().add(ideia);
-
-        ideaRepository.save(ideia);
-        userRepository.save(jurado);
     }
 
+    public double calcularMediaNotas(UUID id_ideia) {
+        IdeaEntity ideia = ideaRepository.findById(id_ideia).orElseThrow(() -> new RuntimeException("Ideia não encontrada"));
+        return ideia.getNotasJurados().values().stream().mapToInt(Integer::intValue).average().orElse(0.0);
+    }
+
+    public void votoPopular(UUID id_ideia, UUID id_colaborador) {
+        try {
+            IdeaEntity ideia = ideaRepository.findById(id_ideia).orElseThrow(() -> new RuntimeException("Ideia não encontrada"));
+
+            UserEntity colaborador = userRepository.findById(id_colaborador).orElseThrow(() -> new RuntimeException("Colaborador não encontrado"));
+
+            if (colaborador.getIdeiasVotadas().contains(ideia)) {
+                throw new RuntimeException("Colaborador já votou nesta ideia");
+            }
+
+            ideia.setVotos(ideia.getVotos() + 1);
+            colaborador.getIdeiasVotadas().add(ideia);
+
+            ideaRepository.save(ideia);
+            userRepository.save(colaborador);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao dar voto popular: " + e.getMessage());
+        }
+    }
 }
