@@ -69,8 +69,8 @@ class EventControllerTest {
         UUID jurado1Id = UUID.randomUUID();
         UUID jurado2Id = UUID.randomUUID();
 
-        UserEntity jurado1 = new UserEntity(jurado1Id, "Jurado 1", "jurado1@gmail.com", "senha1", null, null, null, null);
-        UserEntity jurado2 = new UserEntity(jurado2Id, "Jurado 2", "jurado2@gmail.com", "senha2", null, null, null, null);
+        UserEntity jurado1 = new UserEntity(jurado1Id, "Jurado 1", "jurado1@gmail.com", "senha1", null, null, null, null, null);
+        UserEntity jurado2 = new UserEntity(jurado2Id, "Jurado 2", "jurado2@gmail.com", "senha2", null, null, null, null, null);
 
         EventEntity evento = new EventEntity(eventId, "Evento Teste", "Descricao",
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 10),
@@ -94,8 +94,8 @@ class EventControllerTest {
         UUID jurado1Id = UUID.randomUUID();
         UUID jurado2Id = UUID.randomUUID();
 
-        UserEntity jurado1 = new UserEntity(jurado1Id, "Jurado 1", "jurado1@gmail.com", "senha1", null, null, null, null);
-        UserEntity jurado2 = new UserEntity(jurado2Id, "Jurado 2", "jurado2@gmail.com", "senha2", null, null, null, null);
+        UserEntity jurado1 = new UserEntity(jurado1Id, "Jurado 1", "jurado1@gmail.com", "senha1", null, null, null, null, null);
+        UserEntity jurado2 = new UserEntity(jurado2Id, "Jurado 2", "jurado2@gmail.com", "senha2", null, null, null, null, null);
 
         EventEntity evento = new EventEntity(eventId, "Evento Teste", "Descricao",
                 LocalDate.of(2024, 1, 1), LocalDate.of(2024, 1, 10),

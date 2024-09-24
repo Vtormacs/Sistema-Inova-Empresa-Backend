@@ -54,15 +54,15 @@ class IdeaControllerTest {
     void setup() {
         idEvento = UUID.randomUUID();
 
-        jurado1 = new UserEntity(UUID.randomUUID(), "Jurado 1", "jurado1@gmail.com", "senha", Role.AVALIADOR, null, null, null);
-        jurado2 = new UserEntity(UUID.randomUUID(), "Jurado 2", "jurado2@gmail.com", "senha", Role.AVALIADOR, null, null, null);
+        jurado1 = new UserEntity(UUID.randomUUID(), "Jurado 1", "jurado1@gmail.com", "senha", Role.AVALIADOR, null, null, null, null);
+        jurado2 = new UserEntity(UUID.randomUUID(), "Jurado 2", "jurado2@gmail.com", "senha", Role.AVALIADOR, null, null, null, null);
 
         jurados = new HashSet<>(Arrays.asList(jurado1, jurado2));
 
-        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null);
+        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null, 0);
         ideia1.setJurados(new HashSet<>());
 
-        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null);
+        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null, 0);
         ideia2.setJurados(new HashSet<>());
 
         ideias = new HashSet<>(Arrays.asList(ideia1, ideia2));
@@ -77,10 +77,10 @@ class IdeaControllerTest {
         EventEntity evento = new EventEntity(UUID.randomUUID(), "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
         evento.setIdeias(new HashSet<>());
 
-        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null);
-        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null, null);
+        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null, null);
 
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null, null);
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null, null, 0);
 
         when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
         when(userRepository.findById(colaborador2.getId())).thenReturn(Optional.of(colaborador2));
@@ -164,7 +164,7 @@ class IdeaControllerTest {
         var response = ideaController.avaliarIdeia(idIdeia, idJurado, nota);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("A nota deve ser entre 3 e 10.", response.getBody());
+        assertEquals("Erro ao avaliar ideia: A nota deve ser entre 3 e 10.", response.getBody());
     }
 
     @Test
@@ -177,7 +177,7 @@ class IdeaControllerTest {
         var response = ideaController.avaliarIdeia(idIdeiaInvalido, idJurado, 5);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Ideia não encontrada", response.getBody());
+        assertEquals("Erro ao avaliar ideia: Ideia não encontrada", response.getBody());
     }
 
     @Test
@@ -190,14 +190,14 @@ class IdeaControllerTest {
         var response = ideaController.avaliarIdeia(idIdeia, idJuradoInvalido, 5);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Ideia não encontrada", response.getBody());
+        assertEquals("Erro ao avaliar ideia: Ideia não encontrada", response.getBody());
     }
 
     @Test
     void avaliarIdeiaJuradoSemPermissao() {
         UUID idIdeia = ideia1.getId();
         UUID idJuradoSemPermissao = UUID.randomUUID();
-        UserEntity juradoSemPermissao = new UserEntity(idJuradoSemPermissao, "Jurado Sem Permissao", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        UserEntity juradoSemPermissao = new UserEntity(idJuradoSemPermissao, "Jurado Sem Permissao", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null, null);
 
         when(userRepository.findById(idJuradoSemPermissao)).thenReturn(Optional.of(juradoSemPermissao));
         when(ideaRepository.findById(idIdeia)).thenReturn(Optional.of(ideia1));
@@ -205,6 +205,6 @@ class IdeaControllerTest {
         var response = ideaController.avaliarIdeia(idIdeia, idJuradoSemPermissao, 5);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-        assertEquals("Este jurado não tem permissão para avaliar esta ideia", response.getBody());
+        assertEquals("Erro ao avaliar ideia: Este jurado não tem permissão para avaliar esta ideia", response.getBody());
     }
 }

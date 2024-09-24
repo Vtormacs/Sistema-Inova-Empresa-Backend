@@ -37,25 +37,44 @@ import java.util.UUID;
         }
     }
 
+    @GetMapping(&quot;/top-ideias-votadas&quot;)
+    public ResponseEntity&lt;List&lt;IdeaEntity&gt;&gt; top10Votados() {
+        try {
+<span class="nc" id="L43">            return ResponseEntity.ok(ideaService.top10Votados());</span>
+<span class="nc" id="L44">        } catch (Exception e) {</span>
+<span class="nc" id="L45">            return ResponseEntity.badRequest().build();</span>
+        }
+    }
+
     @PostMapping(&quot;/distribuir-ideias&quot;)
     public ResponseEntity&lt;Void&gt; distribuirIdeias(@RequestParam UUID id_evento) {
         try {
-<span class="fc" id="L43">            ideaService.distribuirIdeias(id_evento);</span>
-<span class="fc" id="L44">            return ResponseEntity.ok().build();</span>
-<span class="fc" id="L45">        } catch (Exception e) {</span>
-<span class="fc" id="L46">            return ResponseEntity.badRequest().build();</span>
+<span class="fc" id="L52">            ideaService.distribuirIdeias(id_evento);</span>
+<span class="fc" id="L53">            return ResponseEntity.ok().build();</span>
+<span class="fc" id="L54">        } catch (Exception e) {</span>
+<span class="fc" id="L55">            return ResponseEntity.badRequest().build();</span>
         }
     }
 
     @PostMapping(&quot;/avaliar&quot;)
     public ResponseEntity&lt;String&gt; avaliarIdeia(@RequestParam UUID id_ideia, @RequestParam UUID id_jurado, @RequestParam int nota) {
         try {
-<span class="nc" id="L53">            ideaService.avaliarIdeia(id_ideia, id_jurado, nota);</span>
-<span class="nc" id="L54">            return ResponseEntity.ok(&quot;Avaliação registrada com sucesso.&quot;);</span>
-<span class="fc" id="L55">        } catch (IllegalArgumentException e) {</span>
-<span class="fc" id="L56">            return ResponseEntity.badRequest().body(e.getMessage());</span>
-<span class="fc" id="L57">        } catch (RuntimeException e) {</span>
-<span class="fc" id="L58">            return ResponseEntity.badRequest().body(e.getMessage());</span>
+<span class="nc" id="L62">            ideaService.avaliarIdeia(id_ideia, id_jurado, nota);</span>
+<span class="nc" id="L63">            return ResponseEntity.ok(&quot;Avaliação registrada com sucesso.&quot;);</span>
+<span class="nc" id="L64">        } catch (IllegalArgumentException e) {</span>
+<span class="nc" id="L65">            return ResponseEntity.badRequest().body(e.getMessage());</span>
+<span class="fc" id="L66">        } catch (RuntimeException e) {</span>
+<span class="fc" id="L67">            return ResponseEntity.badRequest().body(e.getMessage());</span>
+        }
+    }
+
+    @PostMapping(&quot;/voto-popular&quot;)
+    public ResponseEntity&lt;Void&gt; votoPopular(@RequestParam UUID id_ideia, @RequestParam UUID id_colaborador) {
+        try {
+<span class="nc" id="L74">            ideaService.votoPopular(id_ideia, id_colaborador);</span>
+<span class="nc" id="L75">            return ResponseEntity.ok().build();</span>
+<span class="nc" id="L76">        } catch (Exception e) {</span>
+<span class="nc" id="L77">            return ResponseEntity.badRequest().build();</span>
         }
     }
 }
