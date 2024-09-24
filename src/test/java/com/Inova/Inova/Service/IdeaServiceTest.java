@@ -44,18 +44,18 @@ class IdeaServiceTest {
 
     @BeforeEach
     void setup() {
-        colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null);
-        colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
+        colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
 
         evento = new EventEntity(UUID.randomUUID(), "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
 
-        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto 1", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null);
-        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null);
+        ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto 1", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null,0);
+        ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null,0);
 
         when(ideaRepository.findAll()).thenReturn(List.of(ideia1, ideia2));
 
-        jurado = new UserEntity(UUID.randomUUID(), "Jurado", "jurado@gmail.com", "senha", Role.COLABORADOR, null, null, null);
-        ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descrição", null, null, null, new HashMap<>());
+        jurado = new UserEntity(UUID.randomUUID(), "Jurado", "jurado@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
+        ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descrição", null, null, null, new HashMap<>(),0);
 
         ideia.setJurados(Set.of(jurado));
         jurado.setAvaliacoes(new HashSet<>());
@@ -69,10 +69,10 @@ class IdeaServiceTest {
         EventEntity evento = new EventEntity(UUID.randomUUID(), "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
         evento.setIdeias(new HashSet<>());
 
-        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null);
-        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        UserEntity colaborador1 = new UserEntity(UUID.randomUUID(), "teste1", "teste1@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
+        UserEntity colaborador2 = new UserEntity(UUID.randomUUID(), "teste2", "teste2@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
 
-        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null, null);
+        IdeaEntity ideia = new IdeaEntity(UUID.randomUUID(), "Ideia", "Impacto", new BigDecimal("1000.00"), "Descricao", null, null, null, null,0);
 
         when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
         when(userRepository.findById(colaborador2.getId())).thenReturn(Optional.of(colaborador2));
@@ -98,7 +98,7 @@ class IdeaServiceTest {
     @Test
     void testAlterarUsuarioNaoEncontrado() {
         UUID idColaboradorNaoEncontrado = UUID.randomUUID();
-        ideia1.setColaboradores(Set.of(colaborador1, new UserEntity(idColaboradorNaoEncontrado, null, null, null, null, null, null, null)));
+        ideia1.setColaboradores(Set.of(colaborador1, new UserEntity(idColaboradorNaoEncontrado, null, null, null, null, null, null, null,null)));
 
         when(userRepository.findById(colaborador1.getId())).thenReturn(Optional.of(colaborador1));
         when(userRepository.findById(idColaboradorNaoEncontrado)).thenReturn(Optional.empty());
@@ -124,15 +124,15 @@ class IdeaServiceTest {
 
         EventEntity evento = new EventEntity(idEvento, "Evento Teste", "Descrição do Evento", null, null, null, null, new HashSet<>(), null);
 
-        UserEntity jurado1 = new UserEntity(UUID.randomUUID(), "Jurado 1", "jurado1@gmail.com", "senha", Role.COLABORADOR, null, null, null);
-        UserEntity jurado2 = new UserEntity(UUID.randomUUID(), "Jurado 2", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        UserEntity jurado1 = new UserEntity(UUID.randomUUID(), "Jurado 1", "jurado1@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
+        UserEntity jurado2 = new UserEntity(UUID.randomUUID(), "Jurado 2", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
 
         Set<UserEntity> jurados = new HashSet<>(Arrays.asList(jurado1, jurado2));
 
-        IdeaEntity ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null);
+        IdeaEntity ideia1 = new IdeaEntity(UUID.randomUUID(), "Ideia 1", "Impacto", new BigDecimal("1000.00"), "Descrição 1", null, null, null, null,0);
         ideia1.setJurados(new HashSet<>()); // Inicializando o conjunto de jurados
 
-        IdeaEntity ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null);
+        IdeaEntity ideia2 = new IdeaEntity(UUID.randomUUID(), "Ideia 2", "Impacto 2", new BigDecimal("2000.00"), "Descrição 2", null, null, null, null,0);
         ideia2.setJurados(new HashSet<>()); // Inicializando o conjunto de jurados
 
         Set<IdeaEntity> ideias = new HashSet<>(Arrays.asList(ideia1, ideia2));
@@ -191,13 +191,13 @@ class IdeaServiceTest {
 
     @Test
     void avaliarIdeiaComNotaInvalida() {
-        int nota = 2; // Nota abaixo do mínimo permitido
+        int nota = 2;
 
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             ideaService.avaliarIdeia(ideia.getId(), jurado.getId(), nota);
         });
 
-        assertEquals("A nota deve ser entre 3 e 10.", exception.getMessage());
+        assertEquals("Erro ao avaliar ideia: A nota deve ser entre 3 e 10.", exception.getMessage());
         verify(ideaRepository, never()).save(any(IdeaEntity.class));
         verify(userRepository, never()).save(any(UserEntity.class));
     }
@@ -213,7 +213,7 @@ class IdeaServiceTest {
             ideaService.avaliarIdeia(idInvalido, jurado.getId(), 5);
         });
 
-        assertEquals("Ideia não encontrada", exception.getMessage());
+        assertEquals("Erro ao avaliar ideia: Ideia não encontrada", exception.getMessage());
 
         verify(ideaRepository, never()).save(any(IdeaEntity.class));
         verify(userRepository, never()).save(any(UserEntity.class));
@@ -229,7 +229,7 @@ class IdeaServiceTest {
             ideaService.avaliarIdeia(ideia.getId(), idJuradoInvalido, 5);
         });
 
-        assertEquals("Jurado não encontrado", exception.getMessage());
+        assertEquals("Erro ao avaliar ideia: Jurado não encontrado", exception.getMessage());
 
         verify(ideaRepository, never()).save(any(IdeaEntity.class));
         verify(userRepository, never()).save(any(UserEntity.class));
@@ -237,7 +237,7 @@ class IdeaServiceTest {
 
     @Test
     void avaliarIdeiaJuradoSemPermissao() {
-        UserEntity juradoSemPermissao = new UserEntity(UUID.randomUUID(), "Jurado Sem Permissao", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null);
+        UserEntity juradoSemPermissao = new UserEntity(UUID.randomUUID(), "Jurado Sem Permissao", "jurado2@gmail.com", "senha", Role.COLABORADOR, null, null, null,null);
 
         when(userRepository.findById(juradoSemPermissao.getId())).thenReturn(Optional.of(juradoSemPermissao));
 
@@ -245,7 +245,7 @@ class IdeaServiceTest {
             ideaService.avaliarIdeia(ideia.getId(), juradoSemPermissao.getId(), 5);
         });
 
-        assertEquals("Este jurado não tem permissão para avaliar esta ideia", exception.getMessage());
+        assertEquals("Erro ao avaliar ideia: Este jurado não tem permissão para avaliar esta ideia", exception.getMessage());
 
         verify(ideaRepository, never()).save(any(IdeaEntity.class));
         verify(userRepository, never()).save(any(UserEntity.class));

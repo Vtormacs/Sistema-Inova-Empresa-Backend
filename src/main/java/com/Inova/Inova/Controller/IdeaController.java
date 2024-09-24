@@ -37,6 +37,15 @@ public class IdeaController {
         }
     }
 
+    @GetMapping("/top-ideias-votadas")
+    public ResponseEntity<List<IdeaEntity>> top10Votados() {
+        try {
+            return ResponseEntity.ok(ideaService.top10Votados());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
     @PostMapping("/distribuir-ideias")
     public ResponseEntity<Void> distribuirIdeias(@RequestParam UUID id_evento) {
         try {
@@ -56,6 +65,16 @@ public class IdeaController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/voto-popular")
+    public ResponseEntity<Void> votoPopular(@RequestParam UUID id_ideia, @RequestParam UUID id_colaborador) {
+        try {
+            ideaService.votoPopular(id_ideia, id_colaborador);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
     }
 }
